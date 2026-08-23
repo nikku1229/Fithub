@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Fithub",
-    "slug": "fithub",
+    "name": "FitQuest",
+    "slug": "fitquest",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

@@ -58,11 +58,12 @@ Earn XP & achievements
 Build consistency
         ↓
 Improve fitness
+```
 
 
 # ✨ Core Features
 
-##🔐 Authentication
+## 🔐 Authentication
 Email/password authentication
 Google authentication
 Firebase Authentication
@@ -73,7 +74,7 @@ Protected routes
 Session management
 Logout
 
-##👤 User Profile
+## 👤 User Profile
 Users can maintain their fitness profile including:
 
 Name
@@ -89,7 +90,7 @@ Activity level
 Diet preferences
 Privacy settings
 
-##📊 Fitness Dashboard
+## 📊 Fitness Dashboard
 The dashboard acts as the central control center for the user.
 
 Users can view:
@@ -125,7 +126,7 @@ Example:
 └─────────────────────────────────────┘
 
 
-##🏃 Fitness Module
+## 🏃 Fitness Module
 The Fitness section contains the user's complete workout ecosystem.
 
 Includes
@@ -142,7 +143,7 @@ Exercise progression
 Personal records
 Fitness analytics
 
-#🏋️ Exercise Categories
+# 🏋️ Exercise Categories
 FitQuest supports different training environments and styles.
 
 Home Workout
