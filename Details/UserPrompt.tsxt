@@ -1,0 +1,17 @@
+Hello gpt, 
+
+Mujhe ek project pe kaam krna h mtlb ek project h scratch se bnana h or ek professional project bnana h..
+
+Project overview:- Project details kuch ye h ki ek app bnana h jo ki fitness ko point out kregi or users ko unke fitness se related chije btaegi like ek dashboard jaha pe users apne fitness ka record kr ske, users ko app daily uske growth ke according tasks de  daily quest ki trh, daily unke workout ko track kre like hrr din 2 3 task as per tere progress, body weight height diet vgera ko dekh ke unhe task de or ye chije track krega unke dashboard ko or task ko like agar m user hu to mujhe ek dashboard dikhe jaha ye sb ho ki mere liye ajj kitne task h or kitne kr diye m ne or kitne rh gye h or daily ke kitne task m mailtain kr rh hu or ye to bss task ke liye hi nhi h workout ke liye bhi h like homeworkout ke liye kon kon si exercise kr skte h or gym me kis type ki or calastanics ke liye kaise workout hone chhaye or kitne hone chhaiye and extra diet maintainence ke liye bhi sb hona chahiye like diet me ky ky lena h ky ky nhi or kis diet me kitne calories protein vitamins vgerea h vo sb or sth hi ek feature jo users ke camere se liye hue photo ko detect krke unke diet me se sare essential nutrients bta de analyse krke de de and sth hi ye bhi track krna ki users exercise complete kr reh h ya nhi like camere se detect ho ki unhone exercise kr liya or vo chije update ho jae dashboard me and ye to personal user ka ho gy sth hi ek dusre track kr ske dusre user ke profile ko or ek leaderboard bhi ho ye sare chije mujhe mere project me hoga and now |
+
+Requirements:- ye rh mera idea or ab mujhe iske liye kuch documents chahiye jo ki mentioned h niche or sth hi ye bhi ki mujhe ye project ke jo jo chije chhiaye like app ke liye design, features, backend auth everything and also for web ki usme deisgn auth vgera kaise hoga or backend server jisme sare auth services api hrr chije hoga 
+
+Tech stacks:- For App react native use hoga with typescript, zustand, vector icons, camera access, authentication management, and firebase. and now for web usage react js with typescript, zustand, localstorage, session storage, cokkies access, vector icon, firebase only all the data presents there of the users and now for backend usage express, authentiation, jwt, firebase, cache, postgressSQL, Redis for cache and everything for the backend needs
+
+Design flow:- In App there is dashboard tab, profile tab, fitness tab diet tab containing these are the essential screen in app or fir sbka design kuch esa hoga ki dashboard me sari chije hongi users ka or profile me sari vo chije jo profiles public hongi or sbhi users ko dikhega or users search bhi vhi hoga or fir fitness vale me daily tasks, exercises, tracking exercise ke liye or diet vale me users ki daily tracking diet, scan diet vala, essential diet sb kuch hoga usme
+
+
+
+or ab ye sare documents mujhe chahiye one by one 
+
+PRD(PRODUCT REQUIREMENTS DOCUMENTS), TRD(TECHNICAL REQUIREMENTS DOCUMENTS), APP FLOW, UI/UX DESIGN BRIEF, BACKEND SCHEMA, IMPLEMENTATION PLAN
