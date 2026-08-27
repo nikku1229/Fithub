@@ -20,7 +20,7 @@
 ### 2.1 Color Palette (suggested — adjust to taste)
 | Role | Color | Usage |
 |---|---|---|
-| Primary | Deep Teal / Emerald (`#0F9D74`-ish) | CTAs, active tab, progress rings |
+| Primary | Deep Teal / Emerald (`#1E2023`-ish) | CTAs, active tab, progress rings |
 | Secondary | Energetic Orange (`#FF7A45`-ish) | Streak highlights, alerts, "scan" actions |
 | Background (light) | Off-white (`#F7F8FA`) | App background |
 | Background (dark) | Near-black (`#121417`) | Dark mode background |

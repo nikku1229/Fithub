@@ -55,7 +55,7 @@ Users struggle with:
 
 ### 5.1 In Scope (MVP)
 - User authentication (email/password + social login via Firebase)
-- Onboarding: collect height, weight, age, gender, fitness goal, experience level, equipment access
+- Onboarding: collect username, height, weight, age, gender, fitness goal, experience level, equipment access, budget, allergy
 - **Dashboard**: today's tasks, completion %, streaks, quick stats
 - **Fitness module**: daily auto-generated tasks (2–3/day) based on profile + history; exercise library (home/gym/calisthenics); manual + camera-based exercise completion tracking
 - **Diet module**: daily diet suggestions, manual food logging, **camera-based food recognition** returning calories/macros/micros, "what to eat / avoid" guidance
