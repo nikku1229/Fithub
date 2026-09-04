@@ -1,4 +1,5 @@
 import express, { type Request, type Response } from "express";
+import prisma from "./config/prisma";
 
 const app = express();
 const PORT = process.env.PORT || 3000;
