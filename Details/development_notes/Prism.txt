@@ -1,0 +1,71 @@
+1. INITIALISATION & PACKAGES START
+-----------------------------------
+Run these commands in your root terminal to create a TypeScript project and install all required Prisma 7 dependencies:
+
+    npm init -y
+    npm install typescript tsx @types/node --save-dev
+    npx tsc --init
+
+Next, install Prisma 7 and the required database driver adapters:
+
+    npm install prisma@7.10.0 @types/pg --save-dev
+    npm install @prisma/client@7.10.0 @prisma/adapter-pg pg dotenv
+
+Now, initialize your specialized Prisma configuration layout:
+
+    npx prisma init --output ../generated/prisma
+
+
+2. ENVIRONMENT VARIABLES & CONFIGURATION
+-----------------------------------------
+1. Open your package.json file and add the ESM module type:
+    "type": "module"
+
+2. Update your tsconfig.json file to match your ESM configuration options:
+    {
+      "compilerOptions": {
+        "module": "ESNext",
+        "moduleResolution": "bundler",
+        "target": "ES2023",
+        "strict": true,
+        "esModuleInterop": true,
+        "ignoreDeprecations": "6.0"
+      }
+    }
+
+3. Open your newly created .env file and fill in your connection details:
+    DATABASE_URL="DATABASE_URL="postgresql://username:password@localhost:5432/PULSE"
+
+
+3. PRISMA SETUP (run these in order during development)
+--------------------------------------------------------
+1. Map your schema rules and create the actual database tables in PostgreSQL:
+
+    npx prisma migrate dev --name init
+
+2. Generate your customized, type-safe Prisma Client into your project folders:
+
+    npx prisma generate
+
+3. (Optional) Open Prisma Studio to view/edit data visually in your web browser:
+
+    npx prisma studio
+
+If you ever change your schema files in the future, run "migrate dev" followed by "generate" again to sync your application layout.
+5.if you want the same structure in your file then use this command to sync your structure as well 
+npx prisma migrate dev
+
+
+
+
+4. PRODUCTION DEPLOYMENT (after everything is finished)
+---------------------------------------------------------
+When your app is fully completed and ready to go live on a cloud server, add these setup commands to your production build pipeline in this exact order:
+
+1. Safely apply all finished updates to your production database without risking data loss:
+
+    npx prisma migrate deploy
+
+2. Generate the customized driver client on the hosting server so your live app can find the database models:
+
+    npx prisma generate
