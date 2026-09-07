@@ -1,0 +1,30 @@
+After completing all the prisma setup (Prism.txt reference) the config set as:
+
+1. INSTALLATION & PACKAGES FOR THE AUTH
+
+    npm install bcryptjs jsonwebtoken zod cookie-parser
+
+    npm install -D @types/bcryptjs @types/jsonwebtoken @types/cookie-parser
+
+These dependencies contains all the authentication and setup for the auth system validation and authentications.
+
+2. SET PORT AND ENVIRONMENT SETUP
+
+    PORT = 3000
+    And all the info as per the .env.example
+    
+3. AUTH ENDPOINTS
+
+    POST /api/v1/auth/register
+    Body: {
+    "email": "user@example.com",
+    "password": "Password123",
+    "name": "John Doe",
+    "username": "nitish_1221",
+    }
+
+    POST /api/v1/auth/login
+    Body: {
+    "email": "user@example.com",
+    "password": "Password123"
+    }

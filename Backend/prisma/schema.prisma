@@ -1,15 +1,11 @@
-// Prisma schema for Pulse app auth system
-// Docs: https://pris.ly/d/prisma-schema
-
-generator client{
-    provider="prisma-client-js"
-    output="../generated/prisma"
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
 }
 
-
-datasource db{
-    provider="postgresql"
+datasource db {
+  provider = "postgresql"
 }
 
-
-
+/// @prisma/schema:import ./models/User.prisma
+/// @prisma/schema:import ./models/Session.prisma

@@ -1,12 +1,11 @@
-// prisma/schema/user.prisma
-
 model User {
   id        String    @id @default(uuid())
 
   email     String    @unique
   name      String
   password  String
-  username  String?   @unique
+  username  String   @unique
+  refreshToken String?
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
@@ -17,6 +16,8 @@ model User {
 
   isDeleted Boolean   @default(false)
   deletedAt DateTime?
+
+  sessions  Session[]
 
   @@index([email])
   @@index([username])

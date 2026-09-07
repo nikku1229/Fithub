@@ -150,7 +150,7 @@ src/
  │    └── notifications/
  ├── services/          # external service wrappers (firebase, nutrition API, vision API)
  ├── utils/
- └── server.ts
+ └── index.ts
 ```
 
 ### 6.2 Key Middleware
