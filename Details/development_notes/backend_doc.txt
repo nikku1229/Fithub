@@ -28,3 +28,17 @@ These dependencies contains all the authentication and setup for the auth system
     "email": "user@example.com",
     "password": "Password123"
     }
+
+    POST /api/v1/auth/refresh-token
+    Header "cookies.refreshToken: REFRESH_TOKEN"
+
+    POST /api/v1/auth/logout
+    Header "Authorization: Bearer ACCESS_TOKEN"
+    Header "cookies.refreshToken: REFRESH_TOKEN"
+
+    POST /api/v1/auth/profile
+    Header "Authorization: Bearer ACCESS_TOKEN"
+
+    POST /api/v1/auth/sessions
+    Header "Authorization: Bearer ACCESS_TOKEN"
+
