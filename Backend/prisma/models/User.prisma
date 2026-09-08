@@ -5,7 +5,6 @@ model User {
   name      String
   password  String
   username  String   @unique
-  refreshToken String?
 
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt

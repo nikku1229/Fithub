@@ -2,6 +2,7 @@ import express, { type Request, type Response } from "express";
 import cookieParser from "cookie-parser";
 import authRoutes from "./modules/auth/auth.routes";
 import prisma from "./config/prisma";
+import { errorHandler } from "./utils/errorHandler";
 
 const app = express();
 const PORT = process.env.PORT;
@@ -9,6 +10,7 @@ const PORT = process.env.PORT;
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
+app.use(errorHandler);
 
 if (!PORT) console.error("Port not provided");
 
