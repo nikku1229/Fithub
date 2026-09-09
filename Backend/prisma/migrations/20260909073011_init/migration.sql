@@ -1,12 +1,18 @@
 -- CreateTable
-CREATE TABLE "Session" (
+CREATE TABLE "sessions" (
     "id" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
     "token" TEXT NOT NULL,
     "expiresAt" TIMESTAMP(3) NOT NULL,
+    "deviceInfo" TEXT,
+    "ipAddress" TEXT,
+    "userAgent" TEXT,
+    "isActive" BOOLEAN NOT NULL DEFAULT true,
+    "lastUsedAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "Session_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "sessions_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
@@ -16,7 +22,6 @@ CREATE TABLE "users" (
     "name" TEXT NOT NULL,
     "password" TEXT NOT NULL,
     "username" TEXT NOT NULL,
-    "refreshToken" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "createdBy" TEXT,
@@ -29,13 +34,19 @@ CREATE TABLE "users" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Session_token_key" ON "Session"("token");
+CREATE UNIQUE INDEX "sessions_token_key" ON "sessions"("token");
 
 -- CreateIndex
-CREATE INDEX "Session_userId_idx" ON "Session"("userId");
+CREATE INDEX "sessions_userId_idx" ON "sessions"("userId");
 
 -- CreateIndex
-CREATE INDEX "Session_token_idx" ON "Session"("token");
+CREATE INDEX "sessions_token_idx" ON "sessions"("token");
+
+-- CreateIndex
+CREATE INDEX "sessions_isActive_idx" ON "sessions"("isActive");
+
+-- CreateIndex
+CREATE INDEX "sessions_expiresAt_idx" ON "sessions"("expiresAt");
 
 -- CreateIndex
 CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
@@ -53,4 +64,4 @@ CREATE INDEX "users_username_idx" ON "users"("username");
 CREATE INDEX "users_createdAt_idx" ON "users"("createdAt");
 
 -- AddForeignKey
-ALTER TABLE "Session" ADD CONSTRAINT "Session_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "sessions" ADD CONSTRAINT "sessions_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;

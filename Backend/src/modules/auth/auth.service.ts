@@ -2,9 +2,17 @@ import bcrypt from "bcryptjs";
 import prisma from "../../config/prisma";
 import { generateTokens, verifyRefreshToken } from "../../config/jwt";
 import { AppError } from "../../utils/errorHandler";
-import type { RegisterInput, LoginInput } from "../../utils/validation";
+import type {
+  RegisterInput,
+  LoginInput,
+  ForgotPasswordInput,
+  VerifyOTPInput,
+  ResetPasswordInput,
+} from "../../utils/validation";
 import type { JwtPayload } from "jsonwebtoken";
 import type { DeviceInfo } from "../../types";
+import { generateOtp, sendOtpEmail } from "../../utils/otpHandler";
+import crypto from "crypto";
 
 const SALT_ROUNDS = parseInt(process.env.BCRYPT_SALT_ROUNDS || "10");
 
@@ -246,5 +254,168 @@ export class AuthService {
     });
 
     return sessions;
+  }
+
+  async forgotPassword(data: ForgotPasswordInput) {
+    const { email } = data;
+
+    const user = await prisma.user.findUnique({
+      where: { email },
+      select: {
+        id: true,
+        email: true,
+        name: true,
+      },
+    });
+
+    if (!user) {
+      throw new AppError("User not found", 404);
+    }
+
+    const existingOTP = await prisma.passwordReset.findFirst({
+      where: {
+        userId: user.id,
+        expiresAt: { gt: new Date() },
+        isUsed: false,
+      },
+    });
+
+    if (existingOTP) {
+      await prisma.passwordReset.update({
+        where: { id: existingOTP.id },
+        data: {
+          isUsed: true,
+          updatedAt: new Date(),
+        },
+      });
+    }
+    const otp = generateOtp();
+
+    await prisma.passwordReset.create({
+      data: {
+        userId: user.id,
+        otp: otp,
+        expiresAt: new Date(Date.now() + 5 * 60 * 1000),
+        isUsed: false,
+      },
+    });
+
+    try {
+      await sendOtpEmail(user.email, otp, user.name);
+    } catch (error) {
+      throw new AppError("Failed to send OTP email", 500);
+    }
+
+    return { success: true };
+  }
+
+  async verifyOTP(data: VerifyOTPInput) {
+    try {
+      const { email, otp } = data;
+
+      const user = await prisma.user.findUnique({
+        where: { email },
+      });
+
+      if (!user) {
+        throw new AppError("User not found", 404);
+      }
+
+      const otpRecord = await prisma.passwordReset.findFirst({
+        where: {
+          userId: user.id,
+          otp: otp,
+          isUsed: false,
+          expiresAt: { gt: new Date() },
+        },
+      });
+
+      if (!otpRecord) {
+        throw new AppError("Invalid or expired OTP", 400);
+      }
+
+      const resetToken = crypto.randomBytes(32).toString("hex");
+
+      await prisma.user.update({
+        where: { id: user.id },
+        data: {
+          resetToken: resetToken,
+          resetTokenExpires: new Date(Date.now() + 5 * 60 * 1000),
+        },
+      });
+
+      await prisma.passwordReset.update({
+        where: { id: otpRecord.id },
+        data: {
+          isUsed: true,
+          updatedAt: new Date(),
+        },
+      });
+
+      return { success: true };
+    } catch (error) {
+      throw new AppError("Failed to verify OTP", 500);
+    }
+  }
+
+  async resetPassword(data: ResetPasswordInput) {
+    try {
+      const { email, newPassword } = data;
+
+      const user = await prisma.user.findUnique({
+        where: { email },
+      });
+
+      if (!user) {
+        throw new AppError("User not found", 404);
+      }
+
+      const isValidToken = await prisma.user.findFirst({
+        where: {
+          id: user.id,
+          resetToken: user.resetToken,
+          resetTokenExpires: { gt: new Date() },
+        },
+      });
+
+      if (
+        !isValidToken ||
+        !user.resetToken ||
+        !user.resetTokenExpires ||
+        user.resetTokenExpires < new Date()
+      ) {
+        throw new AppError(
+          "Reset token expired. Please request a new OTP",
+          400,
+        );
+      }
+
+      const hashedPassword = await bcrypt.hash(newPassword, SALT_ROUNDS);
+
+      await prisma.user.update({
+        where: { id: user.id },
+        data: {
+          password: hashedPassword,
+          resetToken: null,
+          resetTokenExpires: null,
+        },
+      });
+
+      await prisma.session.updateMany({
+        where: {
+          userId: user.id,
+          isActive: true,
+        },
+        data: {
+          isActive: false,
+          expiresAt: new Date(),
+          updatedAt: new Date(),
+        },
+      });
+
+      return { success: true };
+    } catch (error) {
+      throw new AppError("Failed to reset password", 500);
+    }
   }
 }
