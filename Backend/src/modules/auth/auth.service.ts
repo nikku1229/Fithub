@@ -157,6 +157,19 @@ export class AuthService {
 
       return tokens;
     } catch (error) {
+      if (refreshToken) {
+        await prisma.session.updateMany({
+          where: {
+            token: refreshToken,
+            isActive: true,
+          },
+          data: {
+            isActive: false,
+            expiresAt: new Date(),
+            updatedAt: new Date(),
+          },
+        });
+      }
       throw new AppError("Invalid or expired refresh token", 401);
     }
   }
