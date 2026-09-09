@@ -9,3 +9,4 @@ datasource db {
 
 /// @prisma/schema:import ./models/User.prisma
 /// @prisma/schema:import ./models/Session.prisma
+/// @prisma/schema:import ./models/PasswordReset.prisma

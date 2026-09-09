@@ -1,6 +1,12 @@
 import type { Request, Response, NextFunction } from "express";
 import { AuthService } from "./auth.service";
-import { registerSchema, loginSchema } from "../../utils/validation";
+import {
+  registerSchema,
+  loginSchema,
+  forgotPasswordSchema,
+  verifyOTPSchema,
+  resetPasswordSchema,
+} from "../../utils/validation";
 import { AppError } from "../../utils/errorHandler";
 import { extractDeviceInfo } from "../../middlewares/deviceInfo";
 
@@ -98,6 +104,51 @@ export class AuthController {
       res.status(200).json({
         success: true,
         message: "Logged out successfully",
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async forgotPassword(req: Request, res: Response, next: NextFunction) {
+    try {
+      const validatedData = forgotPasswordSchema.parse(req.body);
+
+      await authService.forgotPassword(validatedData);
+
+      res.status(200).json({
+        message: "Otp sent to your email successfully",
+        success: true,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async verifyOTP(req: Request, res: Response, next: NextFunction) {
+    try {
+      const validatedData = verifyOTPSchema.parse(req.body);
+
+      await authService.verifyOTP(validatedData);
+
+      res.status(200).json({
+        message: "OTP verified successfully",
+        success: true,
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async resetPassword(req: Request, res: Response, next: NextFunction) {
+    try {
+      const validatedData = resetPasswordSchema.parse(req.body);
+
+      await authService.resetPassword(validatedData);
+      
+      res.status(200).json({
+        message: "Password reset successfully.",
+        success: true,
       });
     } catch (error) {
       next(error);
