@@ -79,6 +79,7 @@ export class AuthController {
 
       res.status(200).json({
         success: true,
+        message: "Token revoked",
         data: {
           accessToken: tokens.accessToken,
         },
@@ -145,7 +146,7 @@ export class AuthController {
       const validatedData = resetPasswordSchema.parse(req.body);
 
       await authService.resetPassword(validatedData);
-      
+
       res.status(200).json({
         message: "Password reset successfully.",
         success: true,

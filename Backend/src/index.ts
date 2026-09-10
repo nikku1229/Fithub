@@ -1,28 +1,45 @@
 import express, { type Request, type Response } from "express";
 import cookieParser from "cookie-parser";
-import authRoutes from "./modules/auth/auth.routes";
 import prisma from "./config/prisma";
+import authRoutes from "./modules/auth/auth.routes";
 import { errorHandler } from "./utils/errorHandler";
+import { corsMiddleware } from "./middlewares/cors";
+import { RateLimiter } from "./middlewares/rateLimiter";
+
+const rateLimiter = new RateLimiter();
 
 const app = express();
 const PORT = process.env.PORT;
 
+app.set("trust proxy", 1);
+app.use(corsMiddleware);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
-app.use(errorHandler);
+app.use(rateLimiter.generalLimiter);
 
 if (!PORT) console.error("Port not provided");
 
-app.get("/api/v1", (req: Request, res: Response) => {
-  res.json({ message: "Hello from pulse!" });
-});
+app.get(
+  "/api/v1",
+  rateLimiter.generalLimiter,
+  (req: Request, res: Response) => {
+    res.json({ message: "Hello from pulse!" });
+  },
+);
 
-app.get("/api/v1/health", (req: Request, res: Response) => {
-  res.status(200).json({ message: "Backend running perfectly" });
-});
+app.get(
+  "/api/v1/health",
+  rateLimiter.generalLimiter,
+  (req: Request, res: Response) => {
+    res.status(200).json({ message: "Backend running perfectly" });
+  },
+);
 
 app.use("/api/v1/auth", authRoutes);
+
+app.use(errorHandler);
 
 const server = app.listen(PORT, async () => {
   try {

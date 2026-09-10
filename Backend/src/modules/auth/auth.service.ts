@@ -130,60 +130,55 @@ export class AuthService {
   }
 
   async refreshToken(refreshToken: string) {
-    try {
-      const decoded = verifyRefreshToken(refreshToken) as JwtPayload;
-      
-      if(!decoded){
-        throw new AppError("Token expired, Please login again",401);
-      }
+    const decoded = verifyRefreshToken(refreshToken) as JwtPayload;
 
-      const session = await prisma.session.findUnique({
-        where: { token: refreshToken },
-        include: { user: true },
-      });
-
-      if (!session) {
-        throw new AppError("Session not found", 401);
-      }
-
-      if (!session.isActive || session.expiresAt < new Date()) {
-        throw new AppError("Session expired or inactive", 401);
-      }
-
-      const user = session.user;
-      if (!user) {
-        throw new AppError("User not found", 404);
-      }
-
-      const tokens = generateTokens(user.id, user.email, user.username);
-
-      await prisma.session.update({
-        where: { id: session.id },
+    if (!decoded) {
+      await prisma.session.updateMany({
+        where: {
+          token: refreshToken,
+          isActive: true,
+        },
         data: {
-          token: tokens.refreshToken,
-          expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
-          lastUsedAt: new Date(),
+          isActive: false,
+          expiresAt: new Date(),
           updatedAt: new Date(),
         },
       });
 
-      return tokens;
-    } catch (error) {
-      if (refreshToken) {
-        await prisma.session.updateMany({
-          where: {
-            token: refreshToken,
-            isActive: true,
-          },
-          data: {
-            isActive: false,
-            expiresAt: new Date(),
-            updatedAt: new Date(),
-          },
-        });
-      }
-      throw new AppError("Invalid or expired refresh token", 401);
+      throw new AppError("Token expired, Please login again", 401);
     }
+
+    const session = await prisma.session.findUnique({
+      where: { token: refreshToken },
+      include: { user: true },
+    });
+
+    if (!session) {
+      throw new AppError("Session not found", 401);
+    }
+
+    if (!session.isActive || session.expiresAt < new Date()) {
+      throw new AppError("Session expired or inactive", 401);
+    }
+
+    const user = session.user;
+    if (!user) {
+      throw new AppError("User not found", 404);
+    }
+
+    const tokens = generateTokens(user.id, user.email, user.username);
+
+    await prisma.session.update({
+      where: { id: session.id },
+      data: {
+        token: tokens.refreshToken,
+        expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+        lastUsedAt: new Date(),
+        updatedAt: new Date(),
+      },
+    });
+
+    return tokens;
   }
 
   async logout(userId: string, refreshToken?: string) {
@@ -276,23 +271,16 @@ export class AuthService {
       throw new AppError("User not found", 404);
     }
 
-    const existingOTP = await prisma.passwordReset.findFirst({
+    await prisma.passwordReset.updateMany({
       where: {
         userId: user.id,
-        expiresAt: { gt: new Date() },
         isUsed: false,
+      },
+      data: {
+        isUsed: true,
       },
     });
 
-    if (existingOTP) {
-      await prisma.passwordReset.update({
-        where: { id: existingOTP.id },
-        data: {
-          isUsed: true,
-          updatedAt: new Date(),
-        },
-      });
-    }
     const otp = generateOtp();
 
     await prisma.passwordReset.create({
@@ -314,112 +302,101 @@ export class AuthService {
   }
 
   async verifyOTP(data: VerifyOTPInput) {
-    try {
-      const { email, otp } = data;
+    const { email, otp } = data;
 
-      const user = await prisma.user.findUnique({
-        where: { email },
-      });
+    const user = await prisma.user.findUnique({
+      where: { email },
+    });
 
-      if (!user) {
-        throw new AppError("User not found", 404);
-      }
-
-      const otpRecord = await prisma.passwordReset.findFirst({
-        where: {
-          userId: user.id,
-          otp: otp,
-          isUsed: false,
-          expiresAt: { gt: new Date() },
-        },
-      });
-
-      if (!otpRecord) {
-        throw new AppError("Invalid or expired OTP", 400);
-      }
-
-      const resetToken = crypto.randomBytes(32).toString("hex");
-
-      await prisma.user.update({
-        where: { id: user.id },
-        data: {
-          resetToken: resetToken,
-          resetTokenExpires: new Date(Date.now() + 5 * 60 * 1000),
-        },
-      });
-
-      await prisma.passwordReset.update({
-        where: { id: otpRecord.id },
-        data: {
-          isUsed: true,
-          updatedAt: new Date(),
-        },
-      });
-
-      return { success: true };
-    } catch (error) {
-      throw new AppError("Failed to verify OTP", 500);
+    if (!user) {
+      throw new AppError("User not found", 404);
     }
+
+    const otpRecord = await prisma.passwordReset.findFirst({
+      where: {
+        userId: user.id,
+        otp: otp,
+        isUsed: false,
+        expiresAt: { gt: new Date() },
+      },
+    });
+
+    if (!otpRecord) {
+      throw new AppError("Invalid or expired OTP", 400);
+    }
+
+    const resetToken = crypto.randomBytes(32).toString("hex");
+
+    await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        resetToken: resetToken,
+        resetTokenExpires: new Date(Date.now() + 5 * 60 * 1000),
+      },
+    });
+
+    await prisma.passwordReset.update({
+      where: { id: otpRecord.id },
+      data: {
+        isUsed: true,
+        updatedAt: new Date(),
+      },
+    });
+
+    return { success: true };
   }
 
   async resetPassword(data: ResetPasswordInput) {
-    try {
-      const { email, newPassword } = data;
+    const { email, newPassword } = data;
 
-      const user = await prisma.user.findUnique({
-        where: { email },
-      });
+    const user = await prisma.user.findUnique({
+      where: { email },
+    });
 
-      if (!user) {
-        throw new AppError("User not found", 404);
-      }
-
-      const isValidToken = await prisma.user.findFirst({
-        where: {
-          id: user.id,
-          resetToken: user.resetToken,
-          resetTokenExpires: { gt: new Date() },
-        },
-      });
-
-      if (
-        !isValidToken ||
-        !user.resetToken ||
-        !user.resetTokenExpires ||
-        user.resetTokenExpires < new Date()
-      ) {
-        throw new AppError(
-          "Reset token expired. Please request a new OTP",
-          400,
-        );
-      }
-
-      const hashedPassword = await bcrypt.hash(newPassword, SALT_ROUNDS);
-
-      await prisma.user.update({
-        where: { id: user.id },
-        data: {
-          password: hashedPassword,
-          resetToken: null,
-          resetTokenExpires: null,
-        },
-      });
-
-      await prisma.session.updateMany({
-        where: {
-          userId: user.id,
-          isActive: true,
-        },
-        data: {
-          isActive: false,
-          expiresAt: new Date(),
-          updatedAt: new Date(),
-        },
-      });
-
-      return { success: true };
-    } catch (error) {
-      throw new AppError("Failed to reset password", 500);
+    if (!user) {
+      throw new AppError("User not found", 404);
     }
+
+    const isValidToken = await prisma.user.findFirst({
+      where: {
+        id: user.id,
+        resetToken: user.resetToken,
+        resetTokenExpires: { gt: new Date() },
+      },
+    });
+
+    if (
+      !isValidToken ||
+      !user.resetToken ||
+      !user.resetTokenExpires ||
+      user.resetTokenExpires < new Date()
+    ) {
+      throw new AppError("Reset token expired. Please request a new OTP", 400);
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, SALT_ROUNDS);
+
+    await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        password: hashedPassword,
+        resetToken: null,
+        resetTokenExpires: null,
+      },
+    });
+
+    await prisma.session.updateMany({
+      where: {
+        userId: user.id,
+        isActive: true,
+      },
+      data: {
+        isActive: false,
+        expiresAt: new Date(),
+        updatedAt: new Date(),
+      },
+    });
+
+    return { success: true };
   }
 }
