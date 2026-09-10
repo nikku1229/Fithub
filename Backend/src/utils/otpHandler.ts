@@ -12,7 +12,7 @@ export const sendOtpEmail = async (
   name: string,
 ) => {
   const mailOptions = {
-    from: process.env.MAIL_USER,
+    from: process.env.EMAIL_USER,
     to: email,
     subject: "Forgot Password OTP",
     html: `
@@ -31,7 +31,9 @@ export const sendOtpEmail = async (
     `,
   };
   try {
+    await transporter.verify();
     await transporter.sendMail(mailOptions);
+    return {success:true};
   } catch (error) {
     throw new AppError("Failed to send OTP email", 500);
   }

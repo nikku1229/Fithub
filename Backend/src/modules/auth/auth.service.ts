@@ -132,6 +132,10 @@ export class AuthService {
   async refreshToken(refreshToken: string) {
     try {
       const decoded = verifyRefreshToken(refreshToken) as JwtPayload;
+      
+      if(!decoded){
+        throw new AppError("Token expired, Please login again",401);
+      }
 
       const session = await prisma.session.findUnique({
         where: { token: refreshToken },
