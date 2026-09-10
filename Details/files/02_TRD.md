@@ -56,7 +56,7 @@
 ## 3. Mobile App (React Native + TypeScript)
 
 ### 3.1 Core Libraries
-- **Navigation**: `@react-navigation/native` (bottom tabs: Dashboard, Fitness, Diet, Profile)
+- **Navigation**: `expo-router` (bottom tabs: Dashboard, Fitness, Diet, Profile)
 - **State management**: `zustand` (with `zustand/middleware persist` + AsyncStorage for offline cache of today's tasks/user profile)
 - **Icons**: `react-native-vector-icons`
 - **Camera**: `react-native-vision-camera` (high-performance frame processor support — needed for real-time pose estimation)
