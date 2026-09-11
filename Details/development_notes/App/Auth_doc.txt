@@ -1,0 +1,4 @@
+1.Installation
+   npm install expo-router
+
+
