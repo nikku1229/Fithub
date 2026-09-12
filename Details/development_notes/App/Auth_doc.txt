@@ -1,4 +1,14 @@
-1.Installation
+1. INSTALLATION FOR THE ROUTER 
+
    npm install expo-router
 
+This give a architecture and layout of the codebase as per the router base that native identifies itself by folder pages.
 
+
+2. INSTALLATION FOR THE GLOBAL STATE MANAGEMENT
+
+   npm install zustand axios expo-secure-store
+
+This install dependence of the zustand and integration of server to client pipeline
+
+Then config environment varible in .env as per .env.example
