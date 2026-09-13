@@ -9,14 +9,19 @@
     "web": "expo start --web"
   },
   "dependencies": {
-    "expo": "~54.0.36",
-    "expo-status-bar": "~3.0.9",
-    "react": "19.1.0",
-    "react-native": "0.81.5"
+    "axios": "^1.20.0",
+    "expo": "~57.0.22",
+    "expo-router": "~57.0.21",
+    "expo-secure-store": "~57.0.4",
+    "expo-status-bar": "~57.0.1",
+    "react": "19.2.3",
+    "react-native": "0.86.3",
+    "zustand": "^5.0.15"
   },
   "devDependencies": {
-    "@types/react": "~19.1.0",
-    "typescript": "~5.9.2"
+    "@types/react": "~19.2.4",
+    "react-native-dotenv": "^4.1.1",
+    "typescript": "~6.0.3"
   },
   "private": true
 }
