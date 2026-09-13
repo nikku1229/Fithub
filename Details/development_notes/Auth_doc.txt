@@ -42,3 +42,25 @@ These dependencies contains all the authentication and setup for the auth system
     GET /api/v1/auth/sessions
     Header "Authorization: Bearer ACCESS_TOKEN"
 
+4. FORGOT PASSWORD
+
+    npm install nodemailer
+    npm install crypto
+
+    POST /api/v1/auth/forgot-password
+    Body: {
+    "email": "user@example.com",
+    }
+
+    POST /api/v1/auth/verify-otp
+    Body:{
+    "otp": "336778",
+     "email": "user@example.com",
+    }
+
+    POST /api/v1/auth/reset-password
+    Body:{
+     "email": "user@example.com",
+     "newPassword::"Hello@123",
+    }
+

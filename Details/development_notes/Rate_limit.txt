@@ -1,0 +1,14 @@
+This middleware applied for the limiting the request as per the user and client intractions and implement in inital base.
+
+1. INSTALLATION & PACKAGES FOR THE AUTH
+
+    npm install express-rate-limit cors 
+    npm install -D @types/cors
+
+These dependencies contains all the rate limiting and browser blocking middlewares.
+  
+2. RATE LIMIT CAPACITY
+
+    General limit :  { 100 req per 15 mint }
+    Auth limit    :  { 10 req per 15 mint }
+    Otp limit     :  { 3 req per 10 mint }
