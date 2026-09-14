@@ -4,7 +4,7 @@ import { AuthRegisterState } from "@/types/registerTypes";
 
 const useRegister = new registerService();
 
-export const useAuthRegister = create<AuthRegisterState>((set, get) => ({
+const useAuthRegister = create<AuthRegisterState>((set) => ({
   isLoading: false,
   error: null,
 
@@ -24,3 +24,5 @@ export const useAuthRegister = create<AuthRegisterState>((set, get) => ({
     }
   },
 }));
+
+export default useAuthRegister;
