@@ -343,11 +343,11 @@ export class AuthService {
       },
     });
 
-    return { success: true };
+    return resetToken;
   }
 
   async resetPassword(data: ResetPasswordInput) {
-    const { email, newPassword } = data;
+    const { email, newPassword, resetToken } = data;
 
     const user = await prisma.user.findUnique({
       where: { email },
@@ -360,7 +360,7 @@ export class AuthService {
     const isValidToken = await prisma.user.findFirst({
       where: {
         id: user.id,
-        resetToken: user.resetToken,
+        resetToken: resetToken,
         resetTokenExpires: { gt: new Date() },
       },
     });
