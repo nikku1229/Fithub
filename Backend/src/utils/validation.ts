@@ -20,6 +20,7 @@ export const loginSchema = z.object({
 export const forgotPasswordSchema = z.object({
   email: z.string().email("Invalid email format"),
 });
+
 export const verifyOTPSchema = z.object({
   email: z.string().email("Invalid email format"),
   otp: z.string().length(6, "OTP must be 6 digits"),
@@ -28,6 +29,7 @@ export const verifyOTPSchema = z.object({
 export const resetPasswordSchema = z.object({
   email: z.string().email("Invalid email format"),
   newPassword: z.string().min(8, "Password must be at least 8 characters"),
+  resetToken: z.string().min(2, "Reset Token invalid"),
 });
 
 export type RegisterInput = z.infer<typeof registerSchema>;

@@ -130,11 +130,14 @@ export class AuthController {
     try {
       const validatedData = verifyOTPSchema.parse(req.body);
 
-      await authService.verifyOTP(validatedData);
+      const resetToken = await authService.verifyOTP(validatedData);
 
       res.status(200).json({
         message: "OTP verified successfully",
         success: true,
+        data: {
+          resetToken: resetToken,
+        },
       });
     } catch (error) {
       next(error);
