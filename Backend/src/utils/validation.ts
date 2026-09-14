@@ -9,7 +9,12 @@ export const registerSchema = z.object({
     .regex(/[a-z]/, "Password must contain at least one lowercase letter")
     .regex(/[0-9]/, "Password must contain at least one number"),
   name: z.string().min(3, "Name must be at least 3 characters"),
-  username: z.string().min(5, "Username must be at least 5 characters"),
+  username: z
+    .string()
+    .trim()
+    .min(3, "Username must be at least 3 characters")
+    .max(30, "Username is too long")
+    .regex(/^[a-zA-Z0-9_]+$/, "Only letters, numbers and _ allowed"),
 });
 
 export const loginSchema = z.object({
@@ -23,12 +28,21 @@ export const forgotPasswordSchema = z.object({
 
 export const verifyOTPSchema = z.object({
   email: z.string().email("Invalid email format"),
-  otp: z.string().length(6, "OTP must be 6 digits"),
+  otp: z
+    .string()
+    .trim()
+    .length(6, "OTP must be exactly 6 digits")
+    .regex(/^\d+$/, "OTP must contain only digits"),
 });
 
 export const resetPasswordSchema = z.object({
   email: z.string().email("Invalid email format"),
-  newPassword: z.string().min(8, "Password must be at least 8 characters"),
+  newPassword: z
+    .string()
+    .min(8, "Password must be at least 8 characters")
+    .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
+    .regex(/[a-z]/, "Password must contain at least one lowercase letter")
+    .regex(/[0-9]/, "Password must contain at least one number"),
   resetToken: z.string().min(2, "Invalid reset token"),
 });
 

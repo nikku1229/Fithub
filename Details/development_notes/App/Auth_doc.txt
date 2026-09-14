@@ -12,3 +12,10 @@ This give a architecture and layout of the codebase as per the router base that 
 This install dependence of the zustand and integration of server to client pipeline
 
 Then config environment varible in .env as per .env.example
+
+
+3. VALIDATION OF INPUT DATA
+
+   npm install zod
+
+This dependency is used to validate every input field or data before hitting the API.
