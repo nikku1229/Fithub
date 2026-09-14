@@ -1,0 +1,14 @@
+export interface ForgotPasswordPayload {
+  email: string;
+}
+
+export interface VerifyOtpPayload {
+  email: string;
+  otp: string;
+}
+
+export interface ResetPasswordPayload {
+  email: string;
+  newPassword: string;
+}
+
