@@ -25,6 +25,7 @@ export const loginSchema = z.object({
 export const forgotPasswordSchema = z.object({
   email: z.string().email("Invalid email format"),
 });
+
 export const verifyOTPSchema = z.object({
   email: z.string().email("Invalid email format"),
   otp: z
