@@ -57,7 +57,7 @@
 
 ### 3.1 Core Libraries
 - **Navigation**: `expo-router` (bottom tabs: Dashboard, Fitness, Diet, Profile)
-- **State management**: `zustand` (with `zustand/middleware persist` + AsyncStorage for offline cache of today's tasks/user profile)
+- **State management**: `zustand` (with `zustand/middleware persist` + AsyncStorage for offline cache of today's tasks/user profile + expo-secure-store for token storage)
 - **Icons**: `react-native-vector-icons`
 - **Camera**: `react-native-vision-camera` (high-performance frame processor support — needed for real-time pose estimation)
 - **Auth**: `@react-native-firebase/auth`
