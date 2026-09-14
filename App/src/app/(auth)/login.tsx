@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link, useRouter } from "expo-router";
 import { Text, View, TouchableOpacity, TextInput } from "react-native";
+import { AuthLayout } from "@/components/auth/AuthLayout";
 import useAuthLogin from "./store/useAuth.login";
 import LoginStyle from "./styles/styles.login";
 
@@ -15,7 +16,6 @@ const LoginScreen = () => {
   });
 
   const handleLogin = async () => {
-    console.log("handle click clicked");
     if (!input.email.trim() || !input.password) return;
 
     const isLogin = await login(input);
@@ -27,31 +27,34 @@ const LoginScreen = () => {
     <View style={{ paddingTop: 100 }}>
       <Text>Pulse Fitness AI</Text>
 
-      {user && <Text>{user.id}</Text>}
+      {/* {user && <Text>{user.id}</Text>}
       {user && <Text>{user.email}</Text>}
       {user && <Text>{user.name}</Text>}
       {user && <Text>{user.username}</Text>}
-      {error && <Text>{error}</Text>}
+      {error && <Text>{error}</Text>} */}
 
-      <TextInput
-        placeholder="Email"
-        placeholderTextColor="#aaa"
-        value={input.email}
-        onChangeText={(text) => setInput({ ...input, email: text })}
-      />
-      <TextInput
-        placeholder="Password"
-        placeholderTextColor="#aaa"
-        secureTextEntry
-        value={input.password}
-        onChangeText={(text) => setInput({ ...input, password: text })}
-      />
+      <AuthLayout>
+        <View>
+          <TextInput
+            placeholder="Email"
+            placeholderTextColor="#aaa"
+            value={input.email}
+            onChangeText={(text) => setInput({ ...input, email: text })}
+          />
+          <TextInput
+            placeholder="Password"
+            placeholderTextColor="#aaa"
+            secureTextEntry
+            value={input.password}
+            onChangeText={(text) => setInput({ ...input, password: text })}
+          />
 
-      <TouchableOpacity onPress={handleLogin}>
-        <Text>Sign In</Text>
-      </TouchableOpacity>
-
-      <View>
+          <TouchableOpacity onPress={handleLogin}>
+            <Text>Sign In</Text>
+          </TouchableOpacity>
+        </View>
+      </AuthLayout>
+      {/* <View>
         <Link href="/register" asChild>
           <TouchableOpacity>
             <Text>Create Account</Text>
@@ -67,7 +70,7 @@ const LoginScreen = () => {
             <Text>Forgot Password?</Text>
           </TouchableOpacity>
         </Link>
-      </View>
+      </View> */}
     </View>
   );
 };
