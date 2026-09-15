@@ -1,4 +1,4 @@
-After completing all the prisma setup (Prism.txt reference) the config set as:
+oAfter completing all the prisma setup (Prism.txt reference) the config set as:
 
 1. INSTALLATION & PACKAGES FOR THE AUTH
 

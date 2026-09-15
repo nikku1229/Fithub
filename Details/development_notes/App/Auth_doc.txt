@@ -19,3 +19,9 @@ Then config environment varible in .env as per .env.example
    npm install zod
 
 This dependency is used to validate every input field or data before hitting the API.
+
+4. LAYOUT SETUP
+
+   npm install react-native-safe-area-context @expo/vector-icons expo-linear-gradient
+
+These dependences install the safe area context for the app view and icons package.
