@@ -16,13 +16,9 @@ class registerService {
       const res = await API.post<RegisterResponse>("/auth/regsiter", validated);
       return registerResponseSchema.parse(res.data);
     } catch (error) {
-      const err = error as AxiosError<{ message?: string; error?: string }>;
+      const err = error as AxiosError;
 
-      throw new Error(
-        err.response?.data?.message ||
-          err.response?.data?.error ||
-          "Registration failed",
-      );
+      throw new Error(err.message);
     }
   };
 }

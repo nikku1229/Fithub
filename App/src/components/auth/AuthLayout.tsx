@@ -1,5 +1,14 @@
 import React from "react";
-import { View, Text, Image, ImageBackground, StatusBar } from "react-native";
+import {
+  View,
+  Text,
+  Image,
+  ImageBackground,
+  StatusBar,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import authLayoutStyle from "./styles.authLayout";
 import { globalStyles } from "@/styles/themes";
@@ -38,7 +47,21 @@ export const AuthLayout = ({ children }: { children: React.ReactNode }) => {
               Set your high performance journey today
             </Text>
           </View>
-          <View style={[authLayoutStyle.authFormSection]}>{children}</View>
+
+          <KeyboardAvoidingView
+            behavior={Platform.OS === "ios" ? "padding" : "height"}
+            keyboardVerticalOffset={0}
+          >
+            <ScrollView
+              showsVerticalScrollIndicator={false}
+              keyboardShouldPersistTaps="handled"
+              contentContainerStyle={{
+                flexGrow: 1,
+              }}
+            >
+              {children}
+            </ScrollView>
+          </KeyboardAvoidingView>
         </SafeAreaView>
       </ImageBackground>
     </>

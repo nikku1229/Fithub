@@ -15,9 +15,8 @@ const useAuthLogin = create<AuthLoginState>((set, get) => ({
   isAuthenticated: false,
 
   login: async (payload) => {
-    set({ isLoading: true, error: null });
-
     try {
+      set({ isLoading: true, error: null });
       const res = await useLogin.loginService(payload);
 
       await SecureStore.setItemAsync(
@@ -46,7 +45,7 @@ const useAuthLogin = create<AuthLoginState>((set, get) => ({
       return true;
     } catch (error) {
       const message = error instanceof Error ? error.message : "Login failed";
-      set({ isLoading: false, error: message, isAuthenticated: false });
+      set({ isLoading: false, error: message });
       return false;
     }
   },

@@ -29,13 +29,9 @@ class forgotService {
       );
       return forgotPasswordResponseSchema.parse(res.data);
     } catch (error) {
-      const err = error as AxiosError<{ message?: string; error?: string }>;
+      const err = error as AxiosError;
 
-      throw new Error(
-        err.response?.data?.message ||
-          err.response?.data?.error ||
-          "Invalid Email Address",
-      );
+      throw new Error(err.message);
     }
   };
 
@@ -51,13 +47,9 @@ class forgotService {
       );
       return verifyOtpResponseSchema.parse(res.data);
     } catch (error) {
-      const err = error as AxiosError<{ message?: string; error?: string }>;
+      const err = error as AxiosError;
 
-      throw new Error(
-        err.response?.data?.message ||
-          err.response?.data?.error ||
-          "Invalid OTP",
-      );
+      throw new Error(err.message);
     }
   };
 
@@ -72,13 +64,9 @@ class forgotService {
       );
       return resetPasswordResponseSchema.parse(res.data);
     } catch (error) {
-      const err = error as AxiosError<{ message?: string; error?: string }>;
+      const err = error as AxiosError;
 
-      throw new Error(
-        err.response?.data?.message ||
-          err.response?.data?.error ||
-          "Password Reset Failed",
-      );
+      throw new Error(err.message);
     }
   };
 }
