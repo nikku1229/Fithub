@@ -1,0 +1,20 @@
+1. DEPENDENCIES DELETION
+
+    delete the node_module, package-lock.json from the app folder
+
+2. CACHE VERIFY AND RESET
+
+    npm chache verify
+
+This will refresh all the chache from the lock-package and node_module
+
+3. INSTALL ALL DEPENDENCIES
+
+    npm install
+    
+4. CHECK ALL THE EXPO DEPENDENCIES
+
+    npx expo-doctor
+    npx expo install --check
+
+Run these command individually and the fix all placed.
