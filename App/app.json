@@ -7,12 +7,6 @@
     "icon": "./assets/logo/Logo.png",
     "userInterfaceStyle": "light",
     "scheme": "fitnessapp",
-    "newArchEnabled": true,
-    "splash": {
-      "image": "./assets/logo/Logo.png",
-      "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
-    },
     "ios": {
       "supportsTablet": true
     },
@@ -21,7 +15,6 @@
         "foregroundImage": "./assets/logo/Logo.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true,
       "predictiveBackGestureEnabled": false
     },
     "web": {
