@@ -1,4 +1,5 @@
 import { StyleSheet } from "react-native";
+import { responsiveHeight, responsiveWidth } from "@/utilities/responsive";
 
 export const globalColors = {
   primaryColor: "#0F9D74",
@@ -23,39 +24,36 @@ export const globalColors = {
 };
 
 export const globalValues = {
-  h1: 28,
-  h2: 22,
-  h3: 18,
-  h4: 16,
-  p: 12,
+  h1: responsiveWidth(28),
+  h2: responsiveWidth(22),
+  h3: responsiveWidth(18),
+  h4: responsiveWidth(16),
+  p: responsiveWidth(12),
 };
 
 export const globalStyles = StyleSheet.create({
   primary_btn: {
-    width: "100%",
     alignItems: "center",
     justifyContent: "center",
     flexDirection: "row",
-    padding: 10,
+    padding: responsiveWidth(10),
     borderRadius: 10,
     gap: 5,
     backgroundColor: globalColors.primaryColor,
   },
 
   secondary_btn: {
-    width: "100%",
     alignItems: "center",
     justifyContent: "center",
-    padding: 15,
+    padding: responsiveWidth(10),
     borderRadius: 10,
     gap: 5,
     backgroundColor: globalColors.secondaryColor,
   },
 
   input_field: {
-    width: "100%",
-    paddingVertical: 15,
-    paddingHorizontal: 30,
+    paddingVertical: responsiveWidth(15),
+    paddingHorizontal: responsiveHeight(40),
     alignItems: "center",
     backgroundColor: globalColors.backgroundLight,
     borderRadius: 10,
@@ -70,5 +68,9 @@ export const globalStyles = StyleSheet.create({
   seperator: {
     height: 1,
     backgroundColor: globalColors.grayDark,
+  },
+
+  loadingBtnOpacity: {
+    opacity: 0.8,
   },
 });

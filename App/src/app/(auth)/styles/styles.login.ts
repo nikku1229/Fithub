@@ -1,25 +1,27 @@
 import { StyleSheet } from "react-native";
 import { globalColors, globalValues } from "@/styles/themes";
+import { responsiveWidth, responsiveHeight } from "@/utilities/responsive";
 
 const loginStyle = StyleSheet.create({
   formContainer: {
-    paddingHorizontal: 20,
-    paddingTop: 40,
-    paddingBottom: 10,
+    paddingHorizontal: responsiveWidth(20),
+    paddingTop: responsiveHeight(35),
+    paddingBottom: responsiveHeight(35),
     flex: 1,
-    borderTopLeftRadius: 20,
-    borderTopRightRadius: 20,
-    borderBottomLeftRadius: 0,
-    borderBottomRightRadius: 0,
+    gap: responsiveHeight(10),
+    borderTopLeftRadius: responsiveWidth(20),
+    borderTopRightRadius: responsiveHeight(20),
+    borderBottomLeftRadius: responsiveWidth(0),
+    borderBottomRightRadius: responsiveHeight(0),
   },
 
   keyboardLayoutContainer: {
-    gap: 12,
+    gap: responsiveHeight(10),
+    flex: 1,
   },
 
   inputFieldContainer: {
     gap: 2,
-    width: "100%",
   },
 
   inputFieldLabel: {
@@ -29,12 +31,11 @@ const loginStyle = StyleSheet.create({
 
   inputWrapper: {
     position: "relative",
-    width: "100%",
   },
 
   frontIcons: {
     position: "absolute",
-    left: 15,
+    left: responsiveWidth(20),
     top: "50%",
     transform: [{ translateX: "-50%" }, { translateY: "-50%" }],
     zIndex: 1,
@@ -42,7 +43,7 @@ const loginStyle = StyleSheet.create({
 
   backIcons: {
     position: "absolute",
-    right: 15,
+    right: responsiveWidth(5),
     top: "50%",
     transform: [{ translateX: "-50%" }, { translateY: "-50%" }],
     zIndex: 1,
@@ -72,8 +73,9 @@ const loginStyle = StyleSheet.create({
   },
 
   seperatorBlockText: {
-    flex: 1,
+    flex: 1.2,
     textTransform: "uppercase",
+    textAlign: "center",
     fontSize: globalValues.p,
     color: globalColors.grayDark,
   },
