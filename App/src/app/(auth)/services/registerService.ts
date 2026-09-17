@@ -1,5 +1,5 @@
 import API from "@/services/api";
-import { AxiosError } from "axios";
+import { handleError } from "@/utilities/errorHandler";
 import {
   type RegisterPayload,
   type RegisterResponse,
@@ -16,9 +16,7 @@ class registerService {
       const res = await API.post<RegisterResponse>("/auth/regsiter", validated);
       return registerResponseSchema.parse(res.data);
     } catch (error) {
-      const err = error as AxiosError;
-
-      throw new Error(err.message);
+      throw new Error(handleError(error));
     }
   };
 }

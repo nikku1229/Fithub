@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Link, useRouter } from "expo-router";
 import { Text, View, TouchableOpacity, TextInput } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
@@ -21,6 +21,13 @@ const LoginScreen = () => {
   });
   const [showPassword, setShowPassword] = useState(false);
 
+  useEffect(() => {
+    if (error) {
+      // console.log("Login Page Error:", error);
+      //Toast apply
+    }
+  }, [error]);
+
   const handleLogin = async () => {
     if (!input.email.trim() || !input.password) return;
 
@@ -29,8 +36,6 @@ const LoginScreen = () => {
       setInput({ email: "", password: "" });
       console.log("Login successful");
       // router.replace("/(tabs)");
-    } else {
-      console.log("Login Page Error", error);
     }
   };
 

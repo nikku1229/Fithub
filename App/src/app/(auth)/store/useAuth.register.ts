@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import registerService from "../services/registerService";
 import { AuthRegisterState } from "@/types/registerTypes";
+import { handleError } from "@/utilities/errorHandler";
 
 const useRegister = new registerService();
 
@@ -16,9 +17,7 @@ const useAuthRegister = create<AuthRegisterState>((set) => ({
       set({ isLoading: false, error: null });
       return true;
     } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "Registration failed";
-
+      const message = handleError(error);
       set({ isLoading: false, error: message });
       return false;
     }
