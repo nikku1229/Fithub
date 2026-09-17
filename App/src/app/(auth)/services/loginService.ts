@@ -1,5 +1,5 @@
 import API from "@/services/api";
-import { AxiosError } from "axios";
+import { handleError } from "@/utilities/errorHandler";
 import {
   type LoginPayload,
   loginPayloadSchema,
@@ -8,15 +8,13 @@ import {
 } from "@/types/loginTypes";
 
 class loginService {
-  loginService = async (payload: LoginPayload) => {
+  loginService = async (payload: LoginPayload): Promise<LoginResponse> => {
     try {
       const validated = loginPayloadSchema.parse(payload);
       const res = await API.post<LoginResponse>("/auth/login", validated);
       return loginResponseSchema.parse(res.data);
     } catch (error) {
-      const err = error as AxiosError;
-
-      throw new Error(err.message);
+      throw new Error(handleError(error));
     }
   };
 }

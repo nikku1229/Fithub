@@ -3,6 +3,7 @@ import * as SecureStore from "expo-secure-store";
 import { STORAGE_KEYS } from "@/utilities/storagekey";
 import loginService from "../services/loginService";
 import { AuthLoginState } from "@/types/loginTypes";
+import { handleError } from "@/utilities/errorHandler";
 
 const useLogin = new loginService();
 
@@ -44,7 +45,7 @@ const useAuthLogin = create<AuthLoginState>((set, get) => ({
       });
       return true;
     } catch (error) {
-      const message = error instanceof Error ? error.message : "Login failed";
+      const message = handleError(error);
       set({ isLoading: false, error: message });
       return false;
     }
@@ -66,8 +67,8 @@ const useAuthLogin = create<AuthLoginState>((set, get) => ({
           isAuthenticated: true,
         });
       }
-    } catch (err) {
-      console.warn("loadFromStorage failed:", err);
+    } catch (error) {
+      console.warn("loadFromStorage failed:", error);
     }
   },
 }));

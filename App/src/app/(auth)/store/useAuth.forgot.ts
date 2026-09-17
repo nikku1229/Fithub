@@ -1,6 +1,9 @@
 import { create } from "zustand";
+import * as SecureStore from "expo-secure-store";
+import { STORAGE_KEYS } from "@/utilities/storagekey";
 import forgotService from "../services/forgotService";
 import { ForgotPasswordState } from "@/types/forgotTypes";
+import { handleError } from "@/utilities/errorHandler";
 
 const useAuthForgot = new forgotService();
 
@@ -17,8 +20,7 @@ const useAuthForgotStore = create<ForgotPasswordState>((set) => ({
       set({ isLoading: false, error: null });
       return true;
     } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "Failed to send OTP";
+      const message = handleError(error);
       set({ isLoading: false, error: message });
       return false;
     }
@@ -27,12 +29,15 @@ const useAuthForgotStore = create<ForgotPasswordState>((set) => ({
   verifyOtp: async (payload) => {
     set({ isLoading: true, error: null });
     try {
-      await useAuthForgot.verifyOtpService(payload);
+      const res = await useAuthForgot.verifyOtpService(payload);
+      await SecureStore.setItemAsync(
+        STORAGE_KEYS.RESET_TOKEN,
+        JSON.stringify(res.data.resetToken),
+      );
       set({ isLoading: false, error: null });
       return true;
     } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "Failed to Verify OTP";
+      const message = handleError(error);
       set({ isLoading: false, error: message });
       return false;
     }
@@ -42,11 +47,11 @@ const useAuthForgotStore = create<ForgotPasswordState>((set) => ({
     set({ isLoading: true, error: null });
     try {
       await useAuthForgot.resetPasswordService(payload);
+      await SecureStore.deleteItemAsync(STORAGE_KEYS.RESET_TOKEN);
       set({ isLoading: false, error: null, email: "" });
       return true;
     } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "Failed to Update Password";
+      const message = handleError(error);
       set({ isLoading: false, error: message });
       return false;
     }

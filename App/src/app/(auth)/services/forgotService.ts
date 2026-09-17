@@ -1,5 +1,6 @@
 import API from "@/services/api";
 import { AxiosError } from "axios";
+import { handleError } from "@/utilities/errorHandler";
 import type {
   ForgotPasswordPayload,
   VerifyOtpPayload,
@@ -29,9 +30,7 @@ class forgotService {
       );
       return forgotPasswordResponseSchema.parse(res.data);
     } catch (error) {
-      const err = error as AxiosError;
-
-      throw new Error(err.message);
+      throw new Error(handleError(error));
     }
   };
 
@@ -47,9 +46,7 @@ class forgotService {
       );
       return verifyOtpResponseSchema.parse(res.data);
     } catch (error) {
-      const err = error as AxiosError;
-
-      throw new Error(err.message);
+      throw new Error(handleError(error));
     }
   };
 
@@ -64,9 +61,7 @@ class forgotService {
       );
       return resetPasswordResponseSchema.parse(res.data);
     } catch (error) {
-      const err = error as AxiosError;
-
-      throw new Error(err.message);
+      throw new Error(handleError(error));
     }
   };
 }
