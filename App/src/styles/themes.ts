@@ -12,6 +12,7 @@ export const globalColors = {
   darkBg_60: "rgba(0,0,0,0.60)",
 
   grayDark_50: "rgba(67, 64, 57, 0.5)",
+  grayDark_70: "rgba(67, 64, 57, 0.7)",
 
   gradientLight: {
     color: ["#0F9D74", "#8CCEBC", "#F7F8FA"] as const,

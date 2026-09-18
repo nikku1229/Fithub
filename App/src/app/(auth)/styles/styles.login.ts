@@ -4,7 +4,7 @@ import { responsiveWidth, responsiveHeight } from "@/utilities/responsive";
 
 const loginStyle = StyleSheet.create({
   formContainer: {
-    paddingHorizontal: responsiveWidth(20),
+    paddingHorizontal: responsiveWidth(25),
     paddingTop: responsiveHeight(35),
     paddingBottom: responsiveHeight(35),
     flex: 1,
