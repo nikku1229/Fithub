@@ -11,7 +11,7 @@ const forgotStyle = StyleSheet.create({
   },
   inputfieldText: {
     fontSize: globalValues.h4,
-    lineHeight: globalValues.h4 * 1.4,
+    lineHeight: globalValues.h4 * 1.1,
     color: globalColors.grayDark_70,
   },
   backToLoginLinkContainer: {

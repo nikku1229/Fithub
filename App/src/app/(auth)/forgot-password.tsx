@@ -8,7 +8,7 @@ import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import forgotStyle from "./styles/styles.forgot";
 import useAuthForgotStore from "./store/useAuth.forgot";
 import RegisterStyle from "./styles/styles.register";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 
 const ForgotPasswordScreen = () => {
   const [input, setInput] = useState({
@@ -16,7 +16,12 @@ const ForgotPasswordScreen = () => {
   });
   const { isLoading } = useAuthForgotStore();
 
-  const handleForgot = () => {};
+  const handleForgot = () => {
+    if(!input.email.trim()) return;
+
+    router.push({
+       pathname: "/(auth)/otp",})
+  };
 
   return (
     <AuthLayout>
