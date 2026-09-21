@@ -8,7 +8,7 @@ export interface AuthRequest extends Request {
   user?: {
     userId: string;
     email: string;
-    username: string;
+    username: string | null;
   };
   session?: {
     id: string;
@@ -97,7 +97,7 @@ export const authMiddleware = async (
 
     next();
   } catch (error) {
-    next(new AppError("Invalid or expired token", 401));
+    next(error);
   }
 };
 

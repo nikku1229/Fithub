@@ -2,8 +2,8 @@ import API from "@/services/api";
 import { handleError } from "@/utilities/errorHandler";
 import {
   type LoginPayload,
-  loginPayloadSchema,
   type LoginResponse,
+  loginPayloadSchema,
   loginResponseSchema,
 } from "@/types/loginTypes";
 

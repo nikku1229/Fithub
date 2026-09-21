@@ -24,10 +24,24 @@ export const generateTokens = (
   return { accessToken, refreshToken };
 };
 
+export const generateUsernameToken = (id: string) => {
+  const payload = { id };
+
+  const usernameToken = jwt.sign(payload, JWT_ACCESS_SECRET, {
+    expiresIn: ACCESS_TOKEN_EXPIRY,
+  });
+
+  return { usernameToken };
+};
+
 export const verifyAccessToken = (token: string) => {
   return jwt.verify(token, JWT_ACCESS_SECRET);
 };
 
 export const verifyRefreshToken = (token: string) => {
   return jwt.verify(token, JWT_REFRESH_SECRET);
+};
+
+export const verifyUsernameToken = (token: string) => {
+  return jwt.verify(token, JWT_ACCESS_SECRET);
 };

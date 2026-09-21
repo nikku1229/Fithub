@@ -23,7 +23,7 @@ const LoginScreen = () => {
 
   useEffect(() => {
     if (error) {
-      // console.log("Login Page Error:", error);
+      console.log("Login Page Error:", error);
       //Toast apply
     }
   }, [error]);
@@ -71,7 +71,9 @@ const LoginScreen = () => {
               blurOnSubmit={false}
               onSubmitEditing={() => passwordRef.current?.focus()}
               value={input.email}
-              onChangeText={(text) => setInput({ ...input, email: text })}
+              onChangeText={(text) =>
+                setInput((prev) => ({ ...prev, email: text }))
+              }
               style={[globalStyles.input_field]}
             />
           </View>
@@ -101,7 +103,9 @@ const LoginScreen = () => {
               returnKeyType="send"
               blurOnSubmit={true}
               onSubmitEditing={handleLogin}
-              onChangeText={(text) => setInput({ ...input, password: text })}
+              onChangeText={(text) =>
+                setInput((prev) => ({ ...prev, password: text }))
+              }
               style={[globalStyles.input_field]}
               ref={passwordRef}
             />

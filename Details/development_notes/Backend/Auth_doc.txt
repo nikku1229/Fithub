@@ -20,7 +20,6 @@ These dependencies contains all the authentication and setup for the auth system
     "email": "user@example.com",
     "password": "Password123",
     "name": "John Doe",
-    "username": "nitish_1221",
     }
 
     POST /api/v1/auth/login
@@ -28,6 +27,14 @@ These dependencies contains all the authentication and setup for the auth system
     "email": "user@example.com",
     "password": "Password123"
     }
+
+    POST /api/v1/auth/username
+    Body: {
+    "id": "userId",
+    "email": "user@example.com",
+    "username": "Your_Username"
+    }
+    Header "Authorization: Bearer USERNAME_TOKEN"
 
     POST /api/v1/auth/refresh-token
     Header "cookies.refreshToken: REFRESH_TOKEN"

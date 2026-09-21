@@ -9,19 +9,12 @@ import forgotStyle from "./styles/styles.forgot";
 import { Ionicons, FontAwesome6 } from "@expo/vector-icons";
 import RegisterStyle from "./styles/styles.register";
 import useAuthRegister from "./store/useAuth.register";
+import type { RegisterPayload } from "@/types/registerTypes";
 
 const UserNameScreen = () => {
   const { register, isLoading, error } = useAuthRegister();
 
-  const [input, setInput] = useState({
-    userName: "",
-  });
-
-  const { name, email, password } = useLocalSearchParams<{
-    name: string;
-    email: string;
-    password: string;
-  }>();
+  const registerDetails = useLocalSearchParams();
 
   const handleUser = () => {};
 
@@ -63,7 +56,7 @@ const UserNameScreen = () => {
               accessibilityRole="text"
               returnKeyType="send"
               blurOnSubmit={false}
-              value={input.userName}
+              value={registerDetails.username}
               onChangeText={(text) =>
                 setInput((prev) => ({ ...prev, userName: text }))
               }

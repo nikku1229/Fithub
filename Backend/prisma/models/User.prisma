@@ -4,7 +4,7 @@ model User {
   email             String    @unique
   name              String
   password          String
-  username          String    @unique
+  username          String?   @unique
   resetToken        String?   @unique
   resetTokenExpires DateTime?
 
@@ -22,7 +22,6 @@ model User {
   passwordResets PasswordReset[]
 
   @@index([email])
-  @@index([username])
   @@index([createdAt])
   @@map("users")
 }
