@@ -1,6 +1,11 @@
 import bcrypt from "bcryptjs";
 import prisma from "../../config/prisma";
-import { generateTokens, verifyRefreshToken } from "../../config/jwt";
+import {
+  generateTokens,
+  verifyRefreshToken,
+  generateUsernameToken,
+  verifyUsernameToken,
+} from "../../config/jwt";
 import { AppError } from "../../utils/errorHandler";
 import type {
   RegisterInput,
@@ -8,6 +13,7 @@ import type {
   ForgotPasswordInput,
   VerifyOTPInput,
   ResetPasswordInput,
+  SetUsernameInput,
 } from "../../utils/validation";
 import type { JwtPayload } from "jsonwebtoken";
 import type { DeviceInfo } from "../../types";
@@ -18,7 +24,7 @@ const SALT_ROUNDS = parseInt(process.env.BCRYPT_SALT_ROUNDS || "10");
 
 export class AuthService {
   async register(data: RegisterInput) {
-    const { email, password, name, username } = data;
+    const { email, password, name } = data;
 
     const existingUser = await prisma.user.findUnique({
       where: { email },
@@ -35,7 +41,6 @@ export class AuthService {
         email,
         password: hashedPassword,
         name: name || "User",
-        username,
       },
       select: {
         id: true,
@@ -46,15 +51,16 @@ export class AuthService {
       },
     });
 
+    const token = generateUsernameToken(user.id);
+
     const userData = {
       id: user.id,
       email: user.email,
       name: user.name,
-      username: user.username,
       createdAt: user.createdAt,
     };
 
-    return { user: userData };
+    return { user: userData, token };
   }
 
   async login(data: LoginInput, deviceInfo: DeviceInfo) {
@@ -127,6 +133,40 @@ export class AuthService {
         expiresAt: session.expiresAt,
       },
     };
+  }
+
+  async setUsername(data: SetUsernameInput) {
+    const { id, username, email, token } = data;
+
+    const decoded = verifyUsernameToken(token) as JwtPayload;
+
+    if (!decoded) {
+      throw new AppError("Invalid token", 409);
+    }
+
+    const existingUser = await prisma.user.findUnique({
+      where: { id, email },
+      select: {
+        id: true,
+        email: true,
+      },
+    });
+
+    if (!existingUser) {
+      throw new AppError("Invalid user", 409);
+    }
+
+    const user_name = await prisma.user.update({
+      where: { id: existingUser.id, email: existingUser.email },
+      data: {
+        username,
+      },
+      select: {
+        username: true,
+      },
+    });
+
+    return user_name;
   }
 
   async refreshToken(refreshToken: string) {

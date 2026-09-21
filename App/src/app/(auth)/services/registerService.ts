@@ -13,7 +13,7 @@ class registerService {
   ): Promise<RegisterResponse> => {
     try {
       const validated = registerPayloadSchema.parse(payload);
-      const res = await API.post<RegisterResponse>("/auth/regsiter", validated);
+      const res = await API.post<RegisterResponse>("/auth/register", validated);
       return registerResponseSchema.parse(res.data);
     } catch (error) {
       throw new Error(handleError(error));

@@ -6,12 +6,6 @@ export const registerPayloadSchema = z.object({
     .trim()
     .min(2, "Name must be at least 2 characters")
     .max(50, "Name is too long"),
-  username: z
-    .string()
-    .trim()
-    .min(3, "Username must be at least 3 characters")
-    .max(30, "Username is too long")
-    .regex(/^[a-zA-Z0-9_]+$/, "Only letters, numbers and _ allowed"),
   email: z
     .string()
     .trim()
@@ -25,15 +19,30 @@ export const registerPayloadSchema = z.object({
     .regex(/[0-9]/, "Password must contain at least one number"),
 });
 
+export const userRegisterSchema = z.object({
+  id: z.string(),
+  email: z.string(),
+  name: z.string(),
+  createdAt: z.string().optional(),
+});
+
 export const registerResponseSchema = z.object({
-  message: z.string(),
+  data: z.object({
+    token: z.string(),
+    user: userRegisterSchema,
+  }),
+  message: z.string().optional(),
 });
 
 export interface AuthRegisterState {
+  user: userRegisterDetails | null;
+  usernameToken: string | null;
   isLoading: boolean;
   error: string | null;
+
   register: (payload: RegisterPayload) => Promise<boolean>;
 }
 
 export type RegisterPayload = z.infer<typeof registerPayloadSchema>;
+export type userRegisterDetails = z.infer<typeof userRegisterSchema>;
 export type RegisterResponse = z.infer<typeof registerResponseSchema>;

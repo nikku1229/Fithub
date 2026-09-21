@@ -9,6 +9,7 @@ const rateLimiter = new RateLimiter();
 
 router.post("/register", rateLimiter.authLimiter, authController.register);
 router.post("/login", rateLimiter.authLimiter, authController.login);
+router.post("/username", rateLimiter.authLimiter, authController.username);
 router.post(
   "/forgot-password",
   rateLimiter.authLimiter,

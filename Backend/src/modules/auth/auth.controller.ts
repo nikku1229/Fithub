@@ -6,6 +6,7 @@ import {
   forgotPasswordSchema,
   verifyOTPSchema,
   resetPasswordSchema,
+  setUsernameScheme,
 } from "../../utils/validation";
 import { AppError } from "../../utils/errorHandler";
 import { extractDeviceInfo } from "../../middlewares/deviceInfo";
@@ -24,6 +25,7 @@ export class AuthController {
         message: "User registered successfully.",
         data: {
           user: result.user,
+          token: result.token,
         },
       });
     } catch (error) {
@@ -53,6 +55,41 @@ export class AuthController {
           user: result.user,
           accessToken: result.tokens.accessToken,
           session: result.session,
+        },
+      });
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async username(req: Request, res: Response, next: NextFunction) {
+    try {
+      const { id, email, username } = req.body;
+      const authHeader = req.headers.authorization;
+      if (!authHeader || !authHeader.startsWith("Bearer ")) {
+        throw new AppError("No token provided", 401);
+      }
+
+      const token = authHeader.split(" ")[1];
+
+      if (!token) {
+        throw new AppError("No token provided", 401);
+      }
+
+      const validatedData = setUsernameScheme.parse({
+        id,
+        email,
+        token,
+        username,
+      });
+
+      const result = await authService.setUsername(validatedData);
+
+      res.status(201).json({
+        success: true,
+        message: "Username update successfully",
+        data: {
+          username: result.username,
         },
       });
     } catch (error) {
