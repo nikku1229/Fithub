@@ -48,6 +48,7 @@ export const authMiddleware = async (
         id: true,
         email: true,
         username: true,
+        status: true,
         isDeleted: true,
         deletedAt: true,
       },
@@ -60,6 +61,10 @@ export const authMiddleware = async (
     // if (user.isDeleted || (user.deletedAt && user.deletedAt < new Date())) {
     //   throw new AppError("User account is deactivated", 401);
     // }
+
+    if (user.status === "PENDING_USERNAME") {
+      throw new AppError("Please login and set username", 403);
+    }
 
     const session = await prisma.session.findFirst({
       where: {

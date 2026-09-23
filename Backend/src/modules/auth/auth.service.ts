@@ -31,6 +31,10 @@ export class AuthService {
     });
 
     if (existingUser) {
+      if (existingUser.status === "PENDING_USERNAME") {
+        throw new AppError("Please login and set username.", 409);
+      }
+
       throw new AppError("User already exist", 409);
     }
 
@@ -46,12 +50,11 @@ export class AuthService {
         id: true,
         email: true,
         name: true,
-        username: true,
         createdAt: true,
       },
     });
 
-    const token = generateUsernameToken(user.id);
+    const token = await generateUsernameToken(user.id);
 
     const userData = {
       id: user.id,
@@ -60,7 +63,7 @@ export class AuthService {
       createdAt: user.createdAt,
     };
 
-    return { user: userData, token };
+    return { user: userData, usernameToken: token.usernameToken };
   }
 
   async login(data: LoginInput, deviceInfo: DeviceInfo) {
@@ -69,14 +72,24 @@ export class AuthService {
     const user = await prisma.user.findUnique({
       where: { email },
     });
-
-    if (!user) {
-      throw new AppError("Invalid Email Id", 401);
-    }
+    if (!user) throw new AppError("Invalid Email Id", 401);
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
-    if (!isPasswordValid) {
-      throw new AppError("Invalid Password", 401);
+    if (!isPasswordValid) throw new AppError("Invalid Password", 401);
+
+    if (user.status === "PENDING_USERNAME" || user.username === null) {
+      const { usernameToken } = await generateUsernameToken(user.id);
+      return {
+        needsOnboarding: true,
+        onboardingToken: usernameToken,
+        user: {
+          id: user.id,
+          email: user.email,
+          name: user.name,
+          username: null,
+          createdAt: user.createdAt,
+        },
+      };
     }
 
     const tokens = generateTokens(user.id, user.email, user.username);
@@ -125,6 +138,7 @@ export class AuthService {
     };
 
     return {
+      needsOnboarding: false,
       user: userData,
       tokens,
       session: {
@@ -135,38 +149,70 @@ export class AuthService {
     };
   }
 
-  async setUsername(data: SetUsernameInput) {
-    const { id, username, email, token } = data;
+  async setUsername(data: { username: string; token: string }) {
+    const { username, token } = data;
 
-    const decoded = verifyUsernameToken(token) as JwtPayload;
-
-    if (!decoded) {
-      throw new AppError("Invalid token", 409);
+    let decoded;
+    try {
+      decoded = verifyUsernameToken(token) as JwtPayload;
+    } catch (err) {
+      throw new AppError("Invalid or expired token", 401);
     }
 
-    const existingUser = await prisma.user.findUnique({
-      where: { id, email },
-      select: {
-        id: true,
-        email: true,
-      },
-    });
-
-    if (!existingUser) {
-      throw new AppError("Invalid user", 409);
+    if (!decoded?.userId || !decoded?.jti) {
+      throw new AppError("Invalid token payload", 401);
     }
 
-    const user_name = await prisma.user.update({
-      where: { id: existingUser.id, email: existingUser.email },
-      data: {
-        username,
-      },
+    const userId = decoded.userId;
+    const user = await prisma.user.findUnique({
+      where: { id: userId },
       select: {
         username: true,
+        status: true,
+        onboardingTokenJti: true,
+        onboardingTokenUsed: true,
       },
     });
+    if (!user) throw new AppError("User not found", 404);
 
-    return user_name;
+    if (user.onboardingTokenUsed) {
+      throw new AppError("Token already used. Please login.", 401);
+    }
+    if (user.onboardingTokenJti !== decoded.jti) {
+      throw new AppError("Token revoked. Please login.", 401);
+    }
+    if (user.username !== null || user.status === "ACTIVE") {
+      throw new AppError("Username already set", 403);
+    }
+
+    const taken = await prisma.user.findUnique({
+      where: { username },
+      select: { id: true },
+    });
+    if (taken && taken.id !== userId) {
+      throw new AppError("Username already used", 409);
+    }
+
+    const updated = await prisma.$transaction(async (tx) => {
+      await tx.user.update({
+        where: { id: userId },
+        data: {
+          onboardingTokenUsed: true,
+          onboardingTokenJti: null,
+        },
+      });
+
+      return tx.user.update({
+        where: { id: userId },
+        data: {
+          username,
+          status: "ACTIVE",
+        },
+        select: { id: true, email: true, username: true },
+      });
+    });
+
+    return updated;
   }
 
   async refreshToken(refreshToken: string) {

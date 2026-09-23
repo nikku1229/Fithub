@@ -5,6 +5,11 @@ model User {
   name              String
   password          String
   username          String?   @unique
+
+  status             UserStatus @default(PENDING_USERNAME)
+  onboardingTokenJti  String?    @unique
+  onboardingTokenUsed Boolean    @default(false)
+
   resetToken        String?   @unique
   resetTokenExpires DateTime?
 
@@ -24,4 +29,9 @@ model User {
   @@index([email])
   @@index([createdAt])
   @@map("users")
+}
+
+enum UserStatus {
+  PENDING_USERNAME
+  ACTIVE
 }
