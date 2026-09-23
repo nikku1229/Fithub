@@ -1,4 +1,4 @@
-import { email, z } from "zod";
+import { z } from "zod";
 
 export const registerSchema = z.object({
   email: z.string().email("Invalid email format"),
@@ -22,9 +22,6 @@ export const loginSchema = z.object({
 });
 
 export const setUsernameScheme = z.object({
-  id: z.string(),
-  email: z.string().email("Invalid email format"),
-  token: z.string(),
   username: z
     .string()
     .trim()
