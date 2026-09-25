@@ -1,5 +1,5 @@
 import { View, Text, TextInput, TouchableOpacity } from "react-native";
-import React, { useRef, useState } from "react";
+import { useState } from "react";
 import { AuthLayout } from "@/components/auth/AuthLayout";
 import { LinearGradient } from "expo-linear-gradient";
 import { globalColors, globalStyles } from "@/styles/themes";
@@ -14,13 +14,13 @@ const ForgotPasswordScreen = () => {
   const [input, setInput] = useState({
     email: "",
   });
-  const { isLoading } = useAuthForgotStore();
-
+  const isLoading = useAuthForgotStore((state) => state.isLoading);
   const handleForgot = () => {
-    if(!input.email.trim()) return;
+    if (!input.email.trim()) return;
 
     router.push({
-       pathname: "/(auth)/otp",})
+      pathname: "/(auth)/otp",
+    });
   };
 
   return (
@@ -60,8 +60,9 @@ const ForgotPasswordScreen = () => {
               accessibilityLabel="Email input field"
               accessibilityHint="Enter your email id"
               accessibilityRole="text"
-              returnKeyType="send"
-              blurOnSubmit={false}
+              returnKeyType="done"
+              blurOnSubmit={true}
+              onSubmitEditing={handleForgot}
               value={input.email}
               onChangeText={(text) =>
                 setInput((prev) => ({ ...prev, email: text }))

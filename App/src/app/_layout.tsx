@@ -1,6 +1,4 @@
-import { StatusBar } from "expo-status-bar";
 import { Stack } from "expo-router";
-import { Text, View } from "react-native";
 
 export default function App() {
   return (

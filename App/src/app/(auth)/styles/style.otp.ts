@@ -35,6 +35,36 @@ const otpStyle = StyleSheet.create({
     color: globalColors.backgroundDark,
   },
 
+  hiddenTextInput: {
+    position: "absolute",
+    width: 0,
+    height: 0,
+    opacity: 0, 
+  },
+otpBoxInput: {
+    width: responsiveWidth(44),
+    height: responsiveHeight(52),
+    borderWidth: 1,
+    borderColor: globalColors.primaryColor,
+    borderRadius: 8,
+    backgroundColor: globalColors.backgroundLight,
+    textAlign: "center",
+    fontSize: globalValues.h3,
+    fontWeight: "600",
+    color: globalColors.backgroundDark,
+  },
+
+  otpBoxInputActive: {
+    borderWidth: 2,
+    borderColor: globalColors.primaryColor,
+  },
+
+  errorText: {
+    fontSize: globalValues.p,
+    color: globalColors.secondaryColor, // Maps to your error tint profile
+    textAlign: "center",
+    marginTop: responsiveHeight(2),
+  }
 
 });
 

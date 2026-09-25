@@ -27,7 +27,7 @@ const forgotStyle = StyleSheet.create({
     fontWeight: "500",
   },
   backToLoginLink: {
-    gap: responsiveWidth(20),
+    gap: responsiveWidth(10),
   },
 });
 

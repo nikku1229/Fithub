@@ -1,7 +1,7 @@
 import { AuthLayout } from "@/components/auth/AuthLayout";
 import { globalColors, globalStyles } from "@/styles/themes";
 import { LinearGradient } from "expo-linear-gradient";
-import { Link, useLocalSearchParams } from "expo-router";
+import { Link, router, useLocalSearchParams } from "expo-router";
 import { useEffect, useState } from "react";
 import { View, TextInput, Button, Text, TouchableOpacity } from "react-native";
 import loginStyle from "./styles/styles.login";
@@ -23,7 +23,11 @@ const UserNameScreen = () => {
     password: string;
   }>();
 
-  const handleUser = () => {};
+  const handleUser = () => {
+    if(!UserNameScreen)
+    return;
+  router.push('/login')
+    };
 
   return (
     <AuthLayout>
@@ -61,7 +65,7 @@ const UserNameScreen = () => {
               accessibilityLabel="Username Field"
               accessibilityHint="Enter your Username"
               accessibilityRole="text"
-              returnKeyType="send"
+              returnKeyType="done"
               blurOnSubmit={false}
               value={input.userName}
               onChangeText={(text) =>
