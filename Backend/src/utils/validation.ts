@@ -9,12 +9,6 @@ export const registerSchema = z.object({
     .regex(/[a-z]/, "Password must contain at least one lowercase letter")
     .regex(/[0-9]/, "Password must contain at least one number"),
   name: z.string().min(3, "Name must be at least 3 characters"),
-  username: z
-    .string()
-    .trim()
-    .min(3, "Username must be at least 3 characters")
-    .max(30, "Username is too long")
-    .regex(/^[a-zA-Z0-9_]+$/, "Only letters, numbers and _ allowed"),
 });
 
 export const loginSchema = z.object({
@@ -25,6 +19,15 @@ export const loginSchema = z.object({
     .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
     .regex(/[a-z]/, "Password must contain at least one lowercase letter")
     .regex(/[0-9]/, "Password must contain at least one number"),
+});
+
+export const setUsernameScheme = z.object({
+  username: z
+    .string()
+    .trim()
+    .min(3, "Username must be at least 3 characters")
+    .max(20, "Username is too long")
+    .regex(/^[a-zA-Z0-9_]+$/, "Only letters, numbers and _ allowed"),
 });
 
 export const forgotPasswordSchema = z.object({
@@ -53,6 +56,7 @@ export const resetPasswordSchema = z.object({
 
 export type RegisterInput = z.infer<typeof registerSchema>;
 export type LoginInput = z.infer<typeof loginSchema>;
+export type SetUsernameInput = z.infer<typeof setUsernameScheme>;
 export type ForgotPasswordInput = z.infer<typeof forgotPasswordSchema>;
 export type VerifyOTPInput = z.infer<typeof verifyOTPSchema>;
 export type ResetPasswordInput = z.infer<typeof resetPasswordSchema>;

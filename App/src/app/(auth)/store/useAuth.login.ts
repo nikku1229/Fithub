@@ -4,6 +4,7 @@ import { STORAGE_KEYS } from "@/utilities/storagekey";
 import loginService from "../services/loginService";
 import { AuthLoginState } from "@/types/loginTypes";
 import { handleError } from "@/utilities/errorHandler";
+import { clearAuthStorage } from "@/services/api";
 
 const useLogin = new loginService();
 
@@ -11,6 +12,8 @@ const useAuthLogin = create<AuthLoginState>((set, get) => ({
   user: null,
   sessions: [],
   accessToken: null,
+  onboardingToken: null,
+  needsOnboarding: false,
   isLoading: false,
   error: null,
   isAuthenticated: false,
@@ -20,9 +23,30 @@ const useAuthLogin = create<AuthLoginState>((set, get) => ({
       set({ isLoading: true, error: null });
       const res = await useLogin.loginService(payload);
 
+      if (res.data.needsOnboarding) {
+        await clearAuthStorage();
+        await SecureStore.setItemAsync(
+          STORAGE_KEYS.ONBOARDING_TOKEN,
+          res.data?.onboardingToken as string,
+        );
+        await SecureStore.setItemAsync(
+          STORAGE_KEYS.USER,
+          JSON.stringify(res.data.user),
+        );
+
+        set({
+          error: null,
+          user: res.data.user,
+          onboardingToken: res.data?.onboardingToken,
+          needsOnboarding: true,
+        });
+        return true;
+      }
+
+      await clearAuthStorage();
       await SecureStore.setItemAsync(
         STORAGE_KEYS.ACCESS_TOKEN,
-        res.data.accessToken,
+        res.data?.accessToken as string,
       );
       await SecureStore.setItemAsync(
         STORAGE_KEYS.USER,
@@ -39,15 +63,16 @@ const useAuthLogin = create<AuthLoginState>((set, get) => ({
         user: res.data.user,
         sessions: res.data.sessions ?? [],
         accessToken: res.data.accessToken,
-        isLoading: false,
         isAuthenticated: true,
         error: null,
       });
       return true;
     } catch (error) {
       const message = handleError(error);
-      set({ isLoading: false, error: message });
+      set({ error: message });
       return false;
+    } finally {
+      set({ isLoading: false });
     }
   },
 

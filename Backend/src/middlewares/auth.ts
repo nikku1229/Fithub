@@ -8,7 +8,7 @@ export interface AuthRequest extends Request {
   user?: {
     userId: string;
     email: string;
-    username: string;
+    username: string | null;
   };
   session?: {
     id: string;
@@ -48,6 +48,7 @@ export const authMiddleware = async (
         id: true,
         email: true,
         username: true,
+        status: true,
         isDeleted: true,
         deletedAt: true,
       },
@@ -60,6 +61,10 @@ export const authMiddleware = async (
     // if (user.isDeleted || (user.deletedAt && user.deletedAt < new Date())) {
     //   throw new AppError("User account is deactivated", 401);
     // }
+
+    if (user.status === "PENDING_USERNAME") {
+      throw new AppError("Please login and set username", 403);
+    }
 
     const session = await prisma.session.findFirst({
       where: {
@@ -97,7 +102,7 @@ export const authMiddleware = async (
 
     next();
   } catch (error) {
-    next(new AppError("Invalid or expired token", 401));
+    next(error);
   }
 };
 

@@ -10,28 +10,37 @@ import loginStyle from "./styles/styles.login";
 import { Link, useRouter } from "expo-router";
 
 const RegisterScreen = () => {
+  const router = useRouter();
+
+  const { register, isLoading, error } = useAuthRegister();
+
   const emailRef = useRef<TextInput>(null);
   const passwordRef = useRef<TextInput>(null);
-  const { isLoading } = useAuthRegister();
-  const router = useRouter();
+
   const [input, setInput] = useState({
     name: "",
     email: "",
     password: "",
   });
-
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleRegister = () => {
-    if (!input.name.trim() || !input.email.trim() || !input.password) return;
-    router.push({
-      pathname: "/(auth)/username",
-      params: {
-        name: input.name,
-        email: input.email,
-        password: input.password,
-      },
-    });
+  useEffect(() => {
+    if (error) {
+      console.log("Register Page Error:", error);
+      //Toast apply
+    }
+  }, [error]);
+
+  const handleRegister = async () => {
+    if (!input.name.trim() || !input.email.trim() || !input.password.trim())
+      return;
+
+    const isRegister = await register(input);
+    if (isRegister) {
+      setInput({ name: "", email: "", password: "" });
+      console.log("Register successful");
+      router.navigate("/username");
+    }
   };
 
   return (

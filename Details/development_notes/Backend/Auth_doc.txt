@@ -1,4 +1,4 @@
-oAfter completing all the prisma setup (Prism.txt reference) the config set as:
+After completing all the prisma setup (Prism.txt reference) the config set as:
 
 1. INSTALLATION & PACKAGES FOR THE AUTH
 
@@ -20,7 +20,6 @@ These dependencies contains all the authentication and setup for the auth system
     "email": "user@example.com",
     "password": "Password123",
     "name": "John Doe",
-    "username": "nitish_1221",
     }
 
     POST /api/v1/auth/login
@@ -28,6 +27,12 @@ These dependencies contains all the authentication and setup for the auth system
     "email": "user@example.com",
     "password": "Password123"
     }
+
+    POST /api/v1/auth/username
+    Body: {
+    "username": "Your_Username"
+    }
+    Header "Authorization: Bearer ONBOARDING_TOKEN"
 
     POST /api/v1/auth/refresh-token
     Header "cookies.refreshToken: REFRESH_TOKEN"
@@ -64,4 +69,3 @@ These dependencies contains all the authentication and setup for the auth system
      "newPassword":"Hello@123",
      "resetToken":"reset_Token"
     }
-

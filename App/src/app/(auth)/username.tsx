@@ -1,33 +1,60 @@
+import { useEffect, useState } from "react";
 import { AuthLayout } from "@/components/auth/AuthLayout";
 import { globalColors, globalStyles } from "@/styles/themes";
 import { LinearGradient } from "expo-linear-gradient";
-import { Link, router, useLocalSearchParams } from "expo-router";
-import { useEffect, useState } from "react";
-import { View, TextInput, Button, Text, TouchableOpacity } from "react-native";
+import { Link, useLocalSearchParams, useRouter } from "expo-router";
+import { View, TextInput, Text, TouchableOpacity } from "react-native";
 import loginStyle from "./styles/styles.login";
 import forgotStyle from "./styles/styles.forgot";
 import { Ionicons, FontAwesome6 } from "@expo/vector-icons";
 import RegisterStyle from "./styles/styles.register";
-import useAuthRegister from "./store/useAuth.register";
+import useAuthUsername from "./store/useAuth.username";
+import useAuthLogin from "./store/useAuth.login";
 
 const UserNameScreen = () => {
-  const { register, isLoading, error } = useAuthRegister();
-
-  const [input, setInput] = useState({
-    userName: "",
-  });
-
-  const { name, email, password } = useLocalSearchParams<{
-    name: string;
-    email: string;
-    password: string;
+  const router = useRouter();
+  const { loginEmail, loginPassword, fromLogin } = useLocalSearchParams<{
+    loginEmail: string;
+    loginPassword: string;
+    fromLogin: string;
   }>();
 
-  const handleUser = () => {
-    if(!UserNameScreen)
-    return;
-  router.push('/login')
-    };
+  const { setUsername, isLoading, error } = useAuthUsername();
+  const { login } = useAuthLogin();
+
+  const [input, setInput] = useState({
+    username: "",
+  });
+
+  useEffect(() => {
+    if (error) {
+      console.log("Username Page Error:", error);
+      //Toast apply
+    }
+  }, [error]);
+
+  const handleUsername = async () => {
+    if (!input.username.trim()) return;
+
+    const isUsernameSet = await setUsername(input);
+    if (isUsernameSet) {
+      setInput({ username: "" });
+      console.log("Username set successful");
+
+      if (fromLogin === "true") {
+        const loginInput = { email: loginEmail, password: loginPassword };
+
+        const isLogin = await login(loginInput);
+        if (isLogin) {
+          console.log("Login successful");
+          // router.replace("/(tabs)");
+        } else {
+          console.log("Something went wrong");
+          router.replace("/login");
+        }
+      }
+    }
+  };
 
   return (
     <AuthLayout>
@@ -65,11 +92,12 @@ const UserNameScreen = () => {
               accessibilityLabel="Username Field"
               accessibilityHint="Enter your Username"
               accessibilityRole="text"
-              returnKeyType="done"
-              blurOnSubmit={false}
-              value={input.userName}
+              returnKeyType="send"
+              blurOnSubmit={true}
+              value={input.username}
+              onSubmitEditing={handleUsername}
               onChangeText={(text) =>
-                setInput((prev) => ({ ...prev, userName: text }))
+                setInput((prev) => ({ ...prev, username: text }))
               }
               style={[globalStyles.input_field]}
             />
@@ -77,8 +105,12 @@ const UserNameScreen = () => {
         </View>
 
         <TouchableOpacity
-          onPress={handleUser}
-          style={[globalStyles.primary_btn, RegisterStyle.btnContainer]}
+          onPress={handleUsername}
+          style={[
+            globalStyles.primary_btn,
+            RegisterStyle.btnContainer,
+            isLoading && globalStyles.loadingBtnOpacity,
+          ]}
           disabled={isLoading}
         >
           {isLoading ? (
@@ -103,15 +135,13 @@ const UserNameScreen = () => {
         </TouchableOpacity>
 
         <TouchableOpacity style={forgotStyle.backToLoginLinkContainer}>
-          <Link href="/register" style={forgotStyle.backToLoginLink}>
+          <Link href="/login" style={forgotStyle.backToLoginLink}>
             <Ionicons
               name="arrow-back"
               size={20}
               color={globalColors.primaryColor}
             />
-            <Text style={forgotStyle.backToLoginLinkText}>
-              Edit Information
-            </Text>
+            <Text style={forgotStyle.backToLoginLinkText}>Back to login</Text>
           </Link>
         </TouchableOpacity>
       </LinearGradient>

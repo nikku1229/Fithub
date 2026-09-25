@@ -1,4 +1,4 @@
-import type { Request, NextFunction } from "express";
+import type { Request } from "express";
 import type { DeviceInfo } from "../types";
 
 export const extractDeviceInfo = (req: Request): DeviceInfo => {
@@ -13,7 +13,6 @@ export const extractDeviceInfo = (req: Request): DeviceInfo => {
   else if (userAgent.includes("Mobile")) deviceName = "Mobile Device";
   else if (userAgent.includes("Postman")) deviceName = "Postman";
 
-  // Unique device ID (IP + UserAgent combination)
   const deviceId = Buffer.from(`${ipAddress}-${userAgent}`)
     .toString("base64")
     .substring(0, 50);

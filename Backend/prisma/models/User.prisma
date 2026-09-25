@@ -4,7 +4,12 @@ model User {
   email             String    @unique
   name              String
   password          String
-  username          String    @unique
+  username          String?   @unique
+
+  status             UserStatus @default(PENDING_USERNAME)
+  onboardingTokenJti  String?    @unique
+  onboardingTokenUsed Boolean    @default(false)
+
   resetToken        String?   @unique
   resetTokenExpires DateTime?
 
@@ -22,7 +27,11 @@ model User {
   passwordResets PasswordReset[]
 
   @@index([email])
-  @@index([username])
   @@index([createdAt])
   @@map("users")
+}
+
+enum UserStatus {
+  PENDING_USERNAME
+  ACTIVE
 }
