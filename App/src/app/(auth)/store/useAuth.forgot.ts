@@ -17,12 +17,14 @@ const useAuthForgotStore = create<ForgotPasswordState>((set) => ({
 
     try {
       await useAuthForgot.forgotPasswordService(payload);
-      set({ isLoading: false, error: null });
+      set({ error: null });
       return true;
     } catch (error) {
       const message = handleError(error);
-      set({ isLoading: false, error: message });
+      set({ error: message });
       return false;
+    } finally {
+      set({ isLoading: false });
     }
   },
 
@@ -34,12 +36,14 @@ const useAuthForgotStore = create<ForgotPasswordState>((set) => ({
         STORAGE_KEYS.RESET_TOKEN,
         JSON.stringify(res.data.resetToken),
       );
-      set({ isLoading: false, error: null });
+      set({ error: null });
       return true;
     } catch (error) {
       const message = handleError(error);
-      set({ isLoading: false, error: message });
+      set({ error: message });
       return false;
+    } finally {
+      set({ isLoading: false });
     }
   },
 
@@ -48,12 +52,14 @@ const useAuthForgotStore = create<ForgotPasswordState>((set) => ({
     try {
       await useAuthForgot.resetPasswordService(payload);
       await SecureStore.deleteItemAsync(STORAGE_KEYS.RESET_TOKEN);
-      set({ isLoading: false, error: null, email: "" });
+      set({ error: null, email: "" });
       return true;
     } catch (error) {
       const message = handleError(error);
-      set({ isLoading: false, error: message });
+      set({ error: message });
       return false;
+    } finally {
+      set({ isLoading: false });
     }
   },
 }));

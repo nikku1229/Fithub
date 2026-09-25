@@ -124,19 +124,11 @@ const LoginScreen = () => {
               onPress={() => setShowPassword(!showPassword)}
               style={[loginStyle.backIcons]}
             >
-              {!showPassword ? (
-                <Ionicons
-                  name="eye-outline"
-                  size={20}
-                  color={globalColors.primaryColor}
-                />
-              ) : (
-                <Ionicons
-                  name="eye-off-outline"
-                  size={20}
-                  color={globalColors.primaryColor}
-                />
-              )}
+               <Ionicons
+                name={!showPassword ? "eye-outline" : "eye-off-outline"}
+                size={20}
+                color={globalColors.primaryColor}
+              />
             </TouchableOpacity>
           </View>
         </View>

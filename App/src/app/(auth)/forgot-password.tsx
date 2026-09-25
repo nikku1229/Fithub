@@ -1,5 +1,5 @@
 import { View, Text, TextInput, TouchableOpacity } from "react-native";
-import React, { useRef, useState } from "react";
+import { useState } from "react";
 import { AuthLayout } from "@/components/auth/AuthLayout";
 import { LinearGradient } from "expo-linear-gradient";
 import { globalColors, globalStyles } from "@/styles/themes";
@@ -8,15 +8,20 @@ import { Ionicons, MaterialCommunityIcons } from "@expo/vector-icons";
 import forgotStyle from "./styles/styles.forgot";
 import useAuthForgotStore from "./store/useAuth.forgot";
 import RegisterStyle from "./styles/styles.register";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 
 const ForgotPasswordScreen = () => {
   const [input, setInput] = useState({
     email: "",
   });
-  const { isLoading } = useAuthForgotStore();
+  const isLoading = useAuthForgotStore((state) => state.isLoading);
+  const handleForgot = () => {
+    if (!input.email.trim()) return;
 
-  const handleForgot = () => {};
+    router.push({
+      pathname: "/(auth)/otp",
+    });
+  };
 
   return (
     <AuthLayout>
@@ -55,8 +60,9 @@ const ForgotPasswordScreen = () => {
               accessibilityLabel="Email input field"
               accessibilityHint="Enter your email id"
               accessibilityRole="text"
-              returnKeyType="send"
-              blurOnSubmit={false}
+              returnKeyType="done"
+              blurOnSubmit={true}
+              onSubmitEditing={handleForgot}
               value={input.email}
               onChangeText={(text) =>
                 setInput((prev) => ({ ...prev, email: text }))
