@@ -22,7 +22,7 @@ export const errorHandler = (
   if (err instanceof ZodError) {
     return res.status(400).json({
       success: false,
-      message: "Validation failed",
+      message: "Invalid input",
       errors: err.issues.map((e) => ({
         field: e.path.join("."),
         message: e.message,

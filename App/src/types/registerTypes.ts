@@ -36,7 +36,7 @@ export const registerResponseSchema = z.object({
 
 export interface AuthRegisterState {
   user: userRegisterDetails | null;
-  usernameToken: string | null;
+  onboardingToken: string | null;
   isLoading: boolean;
   error: string | null;
 

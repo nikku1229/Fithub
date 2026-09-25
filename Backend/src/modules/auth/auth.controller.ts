@@ -73,19 +73,14 @@ export class AuthController {
 
   async username(req: Request, res: Response, next: NextFunction) {
     try {
-      const { username } = req.body;
-
       const authHeader = req.headers.authorization;
-      if (!authHeader || !authHeader?.startsWith("Bearer ")) {
+      if (!authHeader || !authHeader?.startsWith("Bearer "))
         throw new AppError("No token provided", 401);
-      }
 
       const token = authHeader.split(" ")[1];
       if (!token) throw new AppError("No token provided", 401);
 
-      const validatedData = setUsernameScheme.parse({
-        username,
-      });
+      const validatedData = setUsernameScheme.parse(req.body);
 
       const result = await authService.setUsername({ ...validatedData, token });
 
