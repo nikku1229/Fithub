@@ -3,5 +3,5 @@ export const STORAGE_KEYS = {
   USER: "user",
   SESSIONS: "session",
   RESET_TOKEN: "resetToken",
-  USERNAME_TOKEN: "usernameToken",
+  ONBOARDING_TOKEN: "onboardingToken",
 } as const;

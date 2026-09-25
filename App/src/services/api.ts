@@ -8,8 +8,21 @@ import * as SecureStore from "expo-secure-store";
 import { STORAGE_KEYS } from "../utilities/storagekey";
 
 const BASE_URL = process.env.EXPO_PUBLIC_API_URL;
-
 if (!BASE_URL) console.log("Backend url not provided");
+
+const AUTH_FREE_ROUTES = [
+  "/auth/login",
+  "/auth/register",
+  "/auth/username",
+  "/auth/forgot-password",
+  "/auth/verify-otp",
+  "/auth/reset-password",
+  "/auth/refresh-token",
+];
+
+const shouldSkipRefresh = (url: string = "") => {
+  return AUTH_FREE_ROUTES.some((route) => url.includes(route));
+};
 
 const API: AxiosInstance = axios.create({
   baseURL: BASE_URL,
@@ -24,6 +37,16 @@ const API: AxiosInstance = axios.create({
 API.interceptors.request.use(
   async (config: InternalAxiosRequestConfig) => {
     try {
+      if (shouldSkipRefresh(config.url)) {
+        const onboardingToken = await SecureStore.getItemAsync(
+          STORAGE_KEYS.ONBOARDING_TOKEN,
+        );
+        if (onboardingToken && config.headers) {
+          config.headers.Authorization = `Bearer ${onboardingToken}`;
+        }
+        return config;
+      }
+
       const token = await SecureStore.getItemAsync(STORAGE_KEYS.ACCESS_TOKEN);
       if (token && config.headers) {
         config.headers.Authorization = `Bearer ${token}`;
@@ -46,17 +69,22 @@ API.interceptors.response.use(
       _retry?: boolean;
     };
 
+    if (shouldSkipRefresh(originalRequest?.url)) {
+      return Promise.reject(error);
+    }
+
     if (error.response?.status === 401 && !originalRequest._retry) {
       originalRequest._retry = true;
 
       if (isRefreshing) {
-        return new Promise((resolve) => {
+        return new Promise((resolve, reject) => {
           pendingQueue.push((newToken) => {
             if (newToken && originalRequest.headers) {
               originalRequest.headers.Authorization = `Bearer ${newToken}`;
+              resolve(API(originalRequest));
+            } else {
+              reject(error);
             }
-
-            resolve(API(originalRequest));
           });
         });
       }
@@ -92,7 +120,7 @@ API.interceptors.response.use(
         await clearAuthStorage();
 
         // TODO: yahan auth store ka logout trigger karna (baad me)
-        return Promise.reject(refreshError);
+        return Promise.reject(error);
       } finally {
         isRefreshing = false;
       }
@@ -105,6 +133,8 @@ export const clearAuthStorage = async (): Promise<void> => {
   await SecureStore.deleteItemAsync(STORAGE_KEYS.ACCESS_TOKEN);
   await SecureStore.deleteItemAsync(STORAGE_KEYS.USER);
   await SecureStore.deleteItemAsync(STORAGE_KEYS.SESSIONS);
+  await SecureStore.deleteItemAsync(STORAGE_KEYS.ONBOARDING_TOKEN);
+  await SecureStore.deleteItemAsync(STORAGE_KEYS.RESET_TOKEN);
 };
 
 export default API;

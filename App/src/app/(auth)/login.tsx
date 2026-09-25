@@ -32,7 +32,18 @@ const LoginScreen = () => {
     if (!input.email.trim() || !input.password) return;
 
     const isLogin = await login(input);
-    if (isLogin) {
+    if (isLogin && useAuthLogin.getState().needsOnboarding) {
+      router.replace({
+        pathname: "/username",
+        params: {
+          loginEmail: input.email,
+          loginPassword: input.password,
+          fromLogin: "true",
+        },
+      });
+      setInput({ email: "", password: "" });
+    }
+    if (isLogin && !useAuthLogin.getState().needsOnboarding) {
       setInput({ email: "", password: "" });
       console.log("Login successful");
       // router.replace("/(tabs)");

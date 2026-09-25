@@ -1,4 +1,5 @@
 import { create } from "zustand";
+import { clearAuthStorage } from "@/services/api";
 import * as SecureStore from "expo-secure-store";
 import { STORAGE_KEYS } from "@/utilities/storagekey";
 import registerService from "../services/registerService";
@@ -9,7 +10,7 @@ const useRegister = new registerService();
 
 const useAuthRegister = create<AuthRegisterState>((set) => ({
   user: null,
-  usernameToken: null,
+  onboardingToken: null,
   isLoading: false,
   error: null,
 
@@ -18,8 +19,9 @@ const useAuthRegister = create<AuthRegisterState>((set) => ({
       set({ isLoading: true, error: null });
       const res = await useRegister.registerService(payload);
 
+      await clearAuthStorage();
       await SecureStore.setItemAsync(
-        STORAGE_KEYS.USERNAME_TOKEN,
+        STORAGE_KEYS.ONBOARDING_TOKEN,
         res.data.token,
       );
       await SecureStore.setItemAsync(
@@ -29,16 +31,17 @@ const useAuthRegister = create<AuthRegisterState>((set) => ({
 
       set({
         user: res.data.user,
-        usernameToken: res.data.token,
-        isLoading: false,
+        onboardingToken: res.data.token,
         error: null,
       });
 
       return true;
     } catch (error) {
       const message = handleError(error);
-      set({ isLoading: false, error: message });
+      set({ error: message });
       return false;
+    } finally {
+      set({ isLoading: false });
     }
   },
 }));

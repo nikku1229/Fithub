@@ -24,13 +24,15 @@ export const userDetailsSchema = z.object({
   id: z.string(),
   email: z.string(),
   name: z.string(),
-  username: z.string(),
+  username: z.string().nullable(),
   createdAt: z.string().optional(),
 });
 
 export const loginResponseSchema = z.object({
   data: z.object({
-    accessToken: z.string(),
+    needsOnboarding: z.boolean(),
+    accessToken: z.string().nullish(),
+    onboardingToken: z.string().nullish(),
     user: userDetailsSchema,
     sessions: z.array(sessionDetailsSchema).optional(),
   }),
@@ -41,6 +43,8 @@ export interface AuthLoginState {
   user: UserDetails | null;
   sessions: SessionDetails[];
   accessToken: string | null;
+  needsOnboarding: boolean;
+  onboardingToken: string | null;
   isLoading: boolean;
   error: string | null;
   isAuthenticated: boolean;
